@@ -22,7 +22,7 @@ export default function HomePage() {
       <aside className="card">
         <h2 className="h2">Юу хэмжигдэх вэ?</h2>
         <p className="p">
-          Өдөөлт гарснаас хойш хариу өгөх хүртэлх хугацаа (RT) ба зөв/буруу хариултын үзүүлэлт хадгалагдана.
+          Тест эхэлснээс хойш хариу өгөх хүртэлх хугацаа (RT) ба зөв/буруу хариултын үзүүлэлт хадгалагдана.
         </p>
         <div className="toast">
           Түүх (History) хуудас нь таны төхөөрөмжийн <span className="mono">localStorage</span>-д хадгалсан үр дүнг харуулна.

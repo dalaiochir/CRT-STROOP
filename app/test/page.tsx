@@ -563,8 +563,8 @@ fetch("/api/submit", {
         {phase === "idle" && !message && !intro && (
 
           <div>
-            <div className="bigText">Бэлэн үү?</div>
-            <div className="smallNote">Эхлэх дээр дарна уу.</div>
+            <div className="bigText">Тест эхлэхээс өмнө бэлтгэлээ хангана уу🌟</div>
+            <div className="smallNote">"Эхлэх" товчин дээр дарж эхэлүүлнэ үү.</div>
           </div>
         )}
 
@@ -616,8 +616,8 @@ fetch("/api/submit", {
 
         {phase === "done" && (
           <div>
-            <div className="bigText">Дууслаа ✅</div>
-            <div className="smallNote">History хуудас руу орж үр дүнгээ харна уу.</div>
+            <div className="bigText">Тест өгсөн танд баярлалаа✨</div>
+            <div className="smallNote">Түүх хуудас руу орж үр дүнгээ харна уу.</div>
           </div>
         )}
       </div>
