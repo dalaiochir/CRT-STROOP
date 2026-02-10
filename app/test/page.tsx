@@ -83,6 +83,12 @@ export default function TestPage() {
   const [intro, setIntro] = useState<IntroState>(null);
   const pendingStartRef = useRef<null | (() => void)>(null);
 
+  //---------------------
+const [stroopTimeLeft, setStroopTimeLeft] = useState<number>(60);
+const stroopEndAtRef = useRef<number>(0);
+const stroopTimerRef = useRef<number | null>(null);
+  //---------------------
+
   const [flash, setFlash] = useState<null | "good" | "bad">(null);
 const flashTimerRef = useRef<number | null>(null);
 
@@ -204,17 +210,68 @@ function openStroopIntro() {
   }
 
   function startStroop() {
-    const trials = makeStroopTrials(60);
-    setStroopStimuli(trials);
-    setStroopTrial(0);
-    trialsRef.current = [];
-    sectionStartRef.current = Date.now();
-    setPhase("stroop");
-    setMessage(null);
-    setLeftLabel("—");
-    setRightLabel("—");
-    setTimeout(() => { trialStartRef.current = performance.now(); }, 50);
+  const trials = makeStroopTrials(240); // их тоо өгчихнө (60 сек дотор бүгд хэрэглэгдэхгүй байж болно)
+  setStroopStimuli(trials);
+  setStroopTrial(0);
+
+  trialsRef.current = [];
+  sectionStartRef.current = Date.now();
+
+  setPhase("stroop");
+  setMessage(null);
+
+  // UI labels
+  setLeftLabel("—");
+  setRightLabel("—");
+
+  // ===== 60 секундийн таймер =====
+  setStroopTimeLeft(60);
+  stroopEndAtRef.current = Date.now() + 60_000;
+
+  if (stroopTimerRef.current !== null) {
+    window.clearInterval(stroopTimerRef.current);
+    stroopTimerRef.current = null;
   }
+
+  stroopTimerRef.current = window.setInterval(() => {
+    const leftMs = stroopEndAtRef.current - Date.now();
+    const leftSec = Math.max(0, Math.ceil(leftMs / 1000));
+    setStroopTimeLeft(leftSec);
+
+    if (leftMs <= 0) {
+      // time over
+      if (stroopTimerRef.current !== null) {
+        window.clearInterval(stroopTimerRef.current);
+        stroopTimerRef.current = null;
+      }
+
+      // vibration when time hits 0
+      if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+        navigator.vibrate([80, 40, 80]);
+      }
+
+      // finalize stroop
+      const endedAt = Date.now();
+      const trialsDone = trialsRef.current;
+      const summary = summarize(trialsDone);
+      const res: SectionResult = {
+        section: "STROOP",
+        startedAt: sectionStartRef.current,
+        endedAt,
+        trials: trialsDone,
+        summary,
+      };
+      setStroopResult(res);
+      setPhase("done");
+      setMessage("Stroop хугацаа дууслаа. Үр дүн History дээр хадгалагдлаа.");
+    }
+  }, 200);
+
+  setTimeout(() => {
+    trialStartRef.current = performance.now();
+  }, 50);
+}
+
 
   function recordAnswer(answer: string, correctAnswer: string, stimulusLabel: string) {
     const rt = performance.now() - trialStartRef.current;
@@ -274,6 +331,8 @@ triggerFeedback(isCorrectNow);
   }
 
   function handleStroopAnswer(inkName: string) {
+    if (Date.now() >= stroopEndAtRef.current) return;
+
     if (!currentStroop) return;
     const correctAnswer = currentStroop.inkName;
     const stimulusLabel = `${currentStroop.word}|${currentStroop.inkName}|${currentStroop.condition}`;
@@ -312,8 +371,13 @@ triggerFeedback(isCorrectNow);
       window.clearTimeout(flashTimerRef.current);
       flashTimerRef.current = null;
     }
+    if (stroopTimerRef.current !== null) {
+      window.clearInterval(stroopTimerRef.current);
+      stroopTimerRef.current = null;
+    }
   };
 }, []);
+
 
   // useEffect(() => {
 
@@ -406,8 +470,13 @@ useEffect(() => {
             <b>{progress}%</b>
             <span className="mono">•</span>
             <span className="smallNote">
-              {phase === "crt" ? `Trial ${crtTrial + 1}/${crtStimuli.length}` : phase === "stroop" ? `Trial ${stroopTrial + 1}/${stroopStimuli.length}` : "—"}
-            </span>
+  {phase === "crt"
+    ? `Trial ${crtTrial + 1}/${crtStimuli.length}`
+    : phase === "stroop"
+      ? `Time: ${stroopTimeLeft}s`
+      : "—"}
+</span>
+
           </div>
         </div>
         {phase === "idle" && (
