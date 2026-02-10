@@ -91,7 +91,7 @@ export default function HistoryPage() {
                     )}
                   </td>
                   <td>
-                    <Link className="btn btnGhost" href={`/history/${s.id}`}>
+                    <Link className="btn1 btnGhost" href={`/history/${s.id}`}>
                       Дэлгэрэнгүй харах
                     </Link>
                   </td>
