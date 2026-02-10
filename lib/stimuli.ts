@@ -324,9 +324,6 @@ export function makeCRT(stage: CRTStage): CRTStimulus[] {
 }
 
 export const STROOP_COLORS = [
-
-
-export const STROOP_COLORS = [
   { name: "Улаан", css: "#ff4d4d" },
   { name: "Цэнхэр", css: "#4d7cff" },
   { name: "Ногоон", css: "#4dff88" },
