@@ -144,6 +144,17 @@ button{ font-family:inherit; }
   transition: .15s ease;
 }
 
+.dividerLine {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.45);
+  transform: translateY(-50%);
+}
+
+
 .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.09); }
 .btnPrimary{ border-color: rgba(124,156,255,.55); background: rgba(124,156,255,.16); }
 .btnDanger{ border-color: rgba(255,107,107,.55); background: rgba(255,107,107,.14); }
