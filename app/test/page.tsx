@@ -287,8 +287,18 @@ useEffect(() => {
           </div>
         </div>
         {phase === "idle" && (
-          <button className="btn btnPrimary" onClick={start}>Эхлэх</button>
-        )}
+  <button
+    className="btn btnPrimary"
+    onClick={start}
+    style={{
+      fontSize: "20px",
+      padding: "20px 36px",
+    }}
+  >
+    Эхлэх
+  </button>
+)}
+
       </div>
 
       {message && <div className="toast">{message}</div>}
@@ -349,30 +359,45 @@ useEffect(() => {
 
       {/* Controls */}
       {phase === "crt" && (
-        <div className="btnRow">
-          <button className="btn" onClick={() => handleCRTAnswer(leftLabel)}>
-            ← {leftLabel}
-          </button>
-          <button className="btn" onClick={() => handleCRTAnswer(rightLabel)}>
-            {rightLabel} →
-          </button>
-        </div>
-      )}
+  <div
+    className="btnRow"
+    style={{
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: "24px",
+    }}
+  >
+    <button className="btn" onClick={() => handleCRTAnswer(leftLabel)}>
+      ← {leftLabel}
+    </button>
+    <button className="btn" onClick={() => handleCRTAnswer(rightLabel)}>
+      {rightLabel} →
+    </button>
+  </div>
+)}
+
 
       {phase === "stroop" && (
-        <div className="btnRow">
-          {STROOP_COLORS.map((c, i) => (
-            <button
-              key={c.name}
-              className="btn"
-              onClick={() => handleStroopAnswer(c.name)}
-              title={`Key ${i + 1}`}
-            >
-              <span className="kbd">{i + 1}</span> {c.name}
-            </button>
-          ))}
-        </div>
-      )}
+  <div
+    className="btnRow"
+    style={{
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: "24px",
+    }}
+  >
+    {STROOP_COLORS.map((c, i) => (
+      <button
+        key={c.name}
+        className="btn"
+        onClick={() => handleStroopAnswer(c.name)}
+      >
+        <span className="kbd">{i + 1}</span> {c.name}
+      </button>
+    ))}
+  </div>
+)}
+
 
       <hr className="hr" />
       <p className="smallNote">
