@@ -563,7 +563,7 @@ fetch("/api/submit", {
         {phase === "idle" && !message && !intro && (
 
           <div>
-            <div className="bigText">Тест эхлэхээс өмнө бэлтгэлээ хангана уу🌟</div>
+            <div className="bigText">Та бэлтгэлээ хангана уу🌟</div>
             <div className="smallNote">"Эхлэх" товчин дээр дарж эхэлүүлнэ үү.</div>
           </div>
         )}
