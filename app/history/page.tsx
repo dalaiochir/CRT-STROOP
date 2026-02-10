@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { clearHistory, loadHistory } from "@/lib/storage";
 import { formatDate, formatMs } from "@/lib/stats";
 import type { TestSession } from "@/lib/types";
+import Link from "next/link";
+
 //aaaaaa
 export default function HistoryPage() {
   const [sessions, setSessions] = useState<TestSession[]>([]);
@@ -64,8 +66,12 @@ export default function HistoryPage() {
                     ) : (
                       <span className="p">—</span>
                     )}
-                  </td>
-                  <td className="mono">{s.id.slice(0, 8)}…</td>
+                  <td>
+  <Link className="btn btnGhost" href={`/history/${s.id}`}>
+    Дэлгэрэнгүй харах
+  </Link>
+</td>
+
                 </tr>
               );
             })}
