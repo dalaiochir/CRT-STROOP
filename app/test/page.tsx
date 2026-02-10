@@ -419,7 +419,40 @@ useEffect(() => {
     stroop: stroopResult,
   };
   addSession(session);
+
+  // addSession(session);  <-- энэ мөрийн дараа
+
+const participantId = getParticipantId();
+
+const crtAll = sectionResults.filter(s => s.section !== "STROOP");
+const crtAcc =
+  crtAll.reduce((a, s) => a + s.summary.accuracy, 0) / Math.max(1, crtAll.length);
+const crtMeanRt =
+  crtAll.reduce((a, s) => a + s.summary.meanRtMs, 0) / Math.max(1, crtAll.length);
+
+const stroopAcc = stroopResult.summary.accuracy;
+const stroopMeanRt = stroopResult.summary.meanRtMs;
+
+fetch("/api/submit", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    participantId,
+    totalTrials: 380,
+    crt: { accuracy: crtAcc, meanRtMs: crtMeanRt },
+    stroop: { accuracy: stroopAcc, meanRtMs: stroopMeanRt },
+    meta: {
+      userAgent: navigator.userAgent,
+      screenW: window.innerWidth,
+      screenH: window.innerHeight,
+    },
+  }),
+}).catch(() => {});
+
 }, [phase, stroopResult, sectionResults]);
+
+import { getParticipantId } from "@/lib/participant";
+
 
 
   // Initial start
