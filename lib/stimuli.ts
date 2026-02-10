@@ -7,12 +7,16 @@ export type CRTStimulus =
   | { type: "arrowPos"; angleDeg: number; y: "top" | "bottom"; correct: string }
   | { type: "grid"; cells: boolean[]; correct: string; kind: "connected" | "symmetry" };
 
+
+  
 export type StroopStimulus = {
   word: string;         // "УЛААН"
   ink: string;          // css color string
   inkName: string;      // "Улаан"
   condition: StroopCondition;
 };
+
+
 
 /**
  * CRT1: Ургамал vs Амьтан (20/20), no repeats, randomized order.
@@ -330,6 +334,9 @@ export const STROOP_COLORS = [
   { name: "Шар", css: "#ffd24d" },
 ] as const;
 
+export const STROOP_WORDS = ["УЛААН","ЦЭНХЭР","НОГООН","ШАР"] as const;
+
+
 //aa
 //export const STROOP_WORDS = ["УЛААН","ЦЭНХЭР","НОГООН","ШАР"] as const;
 
@@ -342,7 +349,7 @@ export function makeStroopTrials(total: number = 60): StroopStimulus[] {
   for (let i = 0; i < half; i++) {
     const idx = Math.floor(Math.random() * STROOP_COLORS.length);
     out.push({
-      word: STROOP_WORDS[idx],
+      word: STROOP_COLORS[idx].name.toUpperCase(),
       ink: STROOP_COLORS[idx].css,
       inkName: STROOP_COLORS[idx].name,
       condition: "congruent",
