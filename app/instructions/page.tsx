@@ -20,7 +20,7 @@ export default function InstructionsPage() {
         <li>CRT.5: Сум → Дээш чиглэсэн vs Доош чиглэсэн (өнцгөөр)</li>
         <li>CRT.6: Сум → Дээд vs Доод (дэлгэцийн аль хагас)</li>
         <li>CRT.7: 3x3 grid → Холбогдсон vs Холбогдоогүй</li>
-        <li>CRT.8: 3x3 grid → Босоо тэнхлэг vs Хэвтээ тэнхлэг</li>
+        <li>CRT.8: 3x3 grid → нэг багана (босоо) эсвэл нэг мөр (хэвтээ)-ийг ялгана</li>
       </ul>
 
       <hr className="hr" />

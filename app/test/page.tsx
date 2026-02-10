@@ -50,6 +50,7 @@ export default function TestPage() {
   const trialStartRef = useRef<number>(0);
   const sectionStartRef = useRef<number>(0);
   const trialsRef = useRef<TrialRecord[]>([]);
+  const savedRef = useRef(false);
 
   const currentStage = CRT_ORDER[crtIndex] ?? null;
   const currentCRTStimulus = phase === "crt" ? crtStimuli[crtTrial] : null;
@@ -123,50 +124,6 @@ export default function TestPage() {
     setRightLabel("—");
     setTimeout(() => { trialStartRef.current = performance.now(); }, 50);
   }
-
-  function finishStroop() {
-    const endedAt = Date.now();
-    const trials = trialsRef.current;
-    const summary = summarize(trials);
-    const res: SectionResult = {
-      section: "STROOP",
-      startedAt: sectionStartRef.current,
-      endedAt,
-      trials,
-      summary,
-    };
-    setStroopResult(res);
-    setPhase("done");
-    setMessage("Дууслаа. Үр дүн History дээр хадгалагдлаа.");
-    // save session
-    const session: TestSession = {
-      id: sessionId(),
-      createdAt: Date.now(),
-      version: "1.0.0",
-      crt: sectionResults,          // NOTE: sectionResults is state; but at this moment it may be stale.
-      stroop: res,
-    };
-    // To avoid stale state, compute latest from callback below in effect.
-    addSession(session);
-  }
-
-  // Fix stale save: when phase becomes done and stroopResult exists, re-save with complete CRT results.
-  useEffect(() => {
-    if (phase !== "done") return;
-    if (!stroopResult) return;
-
-    // remove the last "incomplete" one by overwriting: simplest is to add a new session with same ID — not ideal.
-    // Instead, we generate final session now.
-    const session: TestSession = {
-      id: sessionId(),
-      createdAt: Date.now(),
-      version: "1.0.0",
-      crt: sectionResults,
-      stroop: stroopResult,
-    };
-    addSession(session);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, stroopResult]);
 
   function recordAnswer(answer: string, correctAnswer: string, stimulusLabel: string) {
     const rt = performance.now() - trialStartRef.current;
@@ -268,8 +225,27 @@ export default function TestPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, leftLabel, rightLabel, stroopTrial, crtTrial]);
 
+// Save session once when completed
+useEffect(() => {
+  if (phase !== "done") return;
+  if (!stroopResult) return;
+  if (savedRef.current) return;
+  savedRef.current = true;
+
+  const session: TestSession = {
+    id: sessionId(),
+    createdAt: Date.now(),
+    version: "1.0.0",
+    crt: sectionResults,
+    stroop: stroopResult,
+  };
+  addSession(session);
+}, [phase, stroopResult, sectionResults]);
+
+
   // Initial start
   const start = () => {
+    savedRef.current = false;
     setSectionResults([]);
     setStroopResult(null);
     setCrtIndex(0);

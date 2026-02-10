@@ -280,27 +280,51 @@ export function makeCRT(stage: CRTStage): CRTStimulus[] {
     const dis = genDisconnectedPatterns(20).map((cells) => ({ type:"grid" as const, cells, correct:"Холбогдоогүй", kind:"connected" as const }));
     return shuffle([...con, ...dis]);
   }
-  // CRT8
-  const vert = genVerticalSymPatterns(20).map((cells) => ({ type:"grid" as const, cells, correct:"Босоо тэнхлэг", kind:"symmetry" as const }));
-  const horiz = genHorizontalSymPatterns(20).map((cells) => ({ type:"grid" as const, cells, correct:"Хэвтээ тэнхлэг", kind:"symmetry" as const }));
-  // Extra guard against duplicates between the two sets
-  const used = new Set<string>();
-  const all = [...vert, ...horiz].filter((s) => {
-    const key = encodeCells(s.cells);
-    if (used.has(key)) return false;
-    used.add(key);
-    return true;
-  });
-  // If filtering removed some, top-up quickly
-  while (all.length < 40) {
-    const add = genVerticalSymPatterns(1)[0];
-    const key = encodeCells(add);
-    if (used.has(key)) continue;
-    used.add(key);
-    all.push({ type:"grid", cells:add, correct:"Босоо тэнхлэг", kind:"symmetry" });
+    // CRT8
+  // 3x3 grid дээр зөвхөн:
+  // - нэг БАГАНА (3 нүд) эсвэл
+  // - нэг МӨР (3 нүд)
+  // харагдана. Хэрэглэгч нь босоо (багана) эсвэл хэвтээ (мөр) тэнхлэгийг аль болох хурдан сонгоно.
+
+  function gridForColumn(col: number): boolean[] {
+    const cells = Array(9).fill(false) as boolean[];
+    for (let r = 0; r < 3; r++) cells[r * 3 + col] = true;
+    return cells;
   }
-  return shuffle(all.slice(0, 40));
+  function gridForRow(row: number): boolean[] {
+    const cells = Array(9).fill(false) as boolean[];
+    for (let c = 0; c < 3; c++) cells[row * 3 + c] = true;
+    return cells;
+  }
+
+  // 20 босоо (column) + 20 хэвтээ (row), balanced, randomized.
+  const colChoices = shuffle(
+    Array.from({ length: 20 }, (_, i) => i % 3)
+  );
+  const rowChoices = shuffle(
+    Array.from({ length: 20 }, (_, i) => i % 3)
+  );
+
+  const vert = colChoices.map((c) => ({
+    type: "grid" as const,
+    cells: gridForColumn(c),
+    correct: "Босоо тэнхлэг",
+    kind: "symmetry" as const,
+  }));
+  const horiz = rowChoices.map((r) => ({
+    type: "grid" as const,
+    cells: gridForRow(r),
+    correct: "Хэвтээ тэнхлэг",
+    kind: "symmetry" as const,
+  }));
+
+  // Note: 3x3 дээр бүтэн мөр/багана нь нийт 6 л боломжтой тул 40 trial-д давталт зайлшгүй гарна.
+  // Гэхдээ balanced + random хийж өгсөн.
+  return shuffle([...vert, ...horiz]);
 }
+
+export const STROOP_COLORS = [
+
 
 export const STROOP_COLORS = [
   { name: "Улаан", css: "#ff4d4d" },
