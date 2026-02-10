@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { getParticipantId } from "@/lib/participant";
 import Arrow from "@/components/Arrow";
 import Grid33 from "@/components/Grid33";
 import { addSession } from "@/lib/storage";
@@ -451,7 +452,7 @@ fetch("/api/submit", {
 
 }, [phase, stroopResult, sectionResults]);
 
-import { getParticipantId } from "@/lib/participant";
+
 
 
 
