@@ -323,17 +323,25 @@ useEffect(() => {
               <Arrow angleDeg={currentCRTStimulus.angleDeg} />
             )}
             {currentCRTStimulus.type === "arrowPos" && (
-              <div style={{ width:"100%", height:"100%", position:"relative" }}>
-                <div style={{
-                  position:"absolute",
-                  left:"50%",
-                  top: currentCRTStimulus.y === "top" ? "18%" : "62%",
-                  transform:"translate(-50%,-50%)"
-                }}>
-                  <Arrow angleDeg={currentCRTStimulus.angleDeg} />
-                </div>
-              </div>
-            )}
+  <div style={{ width: "100%", height: "100%", position: "relative" }}>
+    
+    {/* === Дээд / Доод зааг === */}
+    <div className="dividerLine" />
+
+    {/* === Сум === */}
+    <div
+      style={{
+        position: "absolute",
+        left: "50%",
+        top: currentCRTStimulus.y === "top" ? "25%" : "75%",
+        transform: "translate(-50%, -50%)",
+      }}
+    >
+      <Arrow angleDeg={currentCRTStimulus.angleDeg} />
+    </div>
+  </div>
+)}
+
             {currentCRTStimulus.type === "grid" && (
               <Grid33 cells={currentCRTStimulus.cells} />
             )}
