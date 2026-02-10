@@ -9,7 +9,8 @@ import type { CRTStimulus, StroopStimulus } from "@/lib/stimuli";
 import { makeCRT, makeStroopTrials, STROOP_COLORS } from "@/lib/stimuli";
 import type { CRTStage, SectionResult, TestSession, TrialRecord } from "@/lib/types";
 
-type Phase = "idle" | "crt" | "break" | "stroop" | "done";
+type Phase = "idle" | "intro" | "crt" | "break" | "stroop" | "done";
+
 
 const CRT_ORDER: CRTStage[] = ["CRT1","CRT2","CRT3","CRT4","CRT5","CRT6","CRT7","CRT8"];
 
@@ -31,7 +32,57 @@ function summarize(trials: TrialRecord[]) {
   };
 }
 
+const CRT_INTRO_TEXT: Record<CRTStage, { title: string; body: string }> = {
+  CRT1: {
+    title: "CRT1 — Ургамал vs Амьтан",
+    body: "Гарч ирэх үгийг ангилаад аль болох хурдан сонгоно.\n← Ургамал  |  → Амьтан\nНийт 40 (20/20).",
+  },
+  CRT2: {
+    title: "CRT2 — Нэг үетэй vs Хоёр үетэй",
+    body: "Гарч ирэх үгийг нэг/хоёр үетэй гэж ангилна.\n← Нэг үетэй  |  → Хоёр үетэй\nНийт 40 (20/20).",
+  },
+  CRT3: {
+    title: "CRT3 — Тэгш vs Сондгой",
+    body: "3 оронтой тоог тэгш/сондгой гэж ангилна.\n← Тэгш  |  → Сондгой\nНийт 40 (20/20).",
+  },
+  CRT4: {
+    title: "CRT4 — 500-с бага vs 500-с их",
+    body: "3 оронтой тоог 500-с бага/их гэж ангилна.\n← 500-с бага  |  → 500-с их\nНийт 40 (20/20).",
+  },
+  CRT5: {
+    title: "CRT5 — Дээш vs Доош (өнцгөөр)",
+    body: "Сумны чиглэлийг (өнцгийн дагуу) ангилна.\n← Дээш чиглэсэн  |  → Доош чиглэсэн\nНийт 40 (20/20).",
+  },
+  CRT6: {
+    title: "CRT6 — Дээд vs Доод (дэлгэцийн хагас)",
+    body: "Сум дэлгэцийн ДЭЭД эсвэл ДООД хагас дээр гарна.\n← Дээд  |  → Доод\nНийт 40 (20/20).",
+  },
+  CRT7: {
+    title: "CRT7 — Холбогдсон vs Холбогдоогүй",
+    body: "3×3 grid доторх нүднүүд холбоотой эсэхийг ангилна.\n← Холбогдсон  |  → Холбогдоогүй\nНийт 40 (20/20).",
+  },
+  CRT8: {
+    title: "CRT8 — Босоо vs Хэвтээ (мөр/багана)",
+    body: "3×3 дээр зөвхөн нэг мөр эсвэл нэг багана бөглөгдөнө.\n← Босоо (багана)  |  → Хэвтээ (мөр)\nНийт 40 (20/20).",
+  },
+};
+
+const STROOP_INTRO = {
+  title: "STROOP — Өнгийг нэрлэнэ",
+  body: "Үгийн УТГЫГ БИШ, зөвхөн ӨНГИЙГ сонгоно.\nТовч: 1-Улаан, 2-Цэнхэр, 3-Ногоон, 4-Шар\nНийт 60.",
+};
+
+
 export default function TestPage() {
+
+  type IntroState =
+  | { kind: "crt"; stage: CRTStage; title: string; body: string }
+  | { kind: "stroop"; title: string; body: string }
+  | null;
+
+  const [intro, setIntro] = useState<IntroState>(null);
+  const pendingStartRef = useRef<null | (() => void)>(null);
+
   const [phase, setPhase] = useState<Phase>("idle");
   const [crtIndex, setCrtIndex] = useState(0);
   const [crtStimuli, setCrtStimuli] = useState<CRTStimulus[]>([]);
@@ -55,6 +106,25 @@ export default function TestPage() {
   const currentStage = CRT_ORDER[crtIndex] ?? null;
   const currentCRTStimulus = phase === "crt" ? crtStimuli[crtTrial] : null;
   const currentStroop = phase === "stroop" ? stroopStimuli[stroopTrial] : null;
+
+  function openCRTIntro(stage: CRTStage) {
+  const t = CRT_INTRO_TEXT[stage];
+  setIntro({ kind: "crt", stage, title: t.title, body: t.body });
+  setPhase("intro");
+  setMessage(null);
+
+  pendingStartRef.current = () => startCRTSection(stage);
+}
+
+function openStroopIntro() {
+  setIntro({ kind: "stroop", title: STROOP_INTRO.title, body: STROOP_INTRO.body });
+  setPhase("intro");
+  setMessage(null);
+
+  pendingStartRef.current = () => startStroop();
+}
+
+
 
   function startCRTSection(stage: CRTStage) {
     const stim = makeCRT(stage);
@@ -107,7 +177,9 @@ export default function TestPage() {
       setMessage(`CRT дууслаа. ${t} секундийн дараа Stroop эхэлнэ...`);
       if (t <= 0) {
         clearInterval(interval);
-        startStroop();
+        //startStroop();
+        openStroopIntro();
+
       }
     }, 1000);
   }
@@ -164,7 +236,8 @@ export default function TestPage() {
         // small pause between sections
         setPhase("idle");
         setMessage(`${currentStage} дууслаа. Дараагийн хэсэг эхлэх гэж байна...`);
-        setTimeout(() => startCRTSection(CRT_ORDER[crtIndex + 1]), 1000);
+        setTimeout(() => openCRTIntro(CRT_ORDER[crtIndex + 1]), 600);
+
       } else {
         // done CRT
         setPhase("idle");
@@ -244,13 +317,22 @@ useEffect(() => {
 
 
   // Initial start
+
   const start = () => {
-    savedRef.current = false;
-    setSectionResults([]);
-    setStroopResult(null);
-    setCrtIndex(0);
-    startCRTSection("CRT1");
-  };
+  savedRef.current = false;
+  setSectionResults([]);
+  setStroopResult(null);
+  setCrtIndex(0);
+  openCRTIntro("CRT1");
+};
+
+  // const start = () => {
+  //   savedRef.current = false;
+  //   setSectionResults([]);
+  //   setStroopResult(null);
+  //   setCrtIndex(0);
+  //   startCRTSection("CRT1");
+  // };
 
   const currentTitle = (() => {
     if (phase === "crt" && currentStage) return currentStage;
@@ -304,7 +386,31 @@ useEffect(() => {
       {message && <div className="toast">{message}</div>}
 
       <div className="stimulusBox">
-        {phase === "idle" && !message && (
+
+        {phase === "intro" && intro && (
+  <div style={{ textAlign: "center", maxWidth: 700 }}>
+    <div className="bigText" style={{ fontSize: 34 }}>{intro.title}</div>
+    <div className="toast" style={{ whiteSpace: "pre-line", marginTop: 12 }}>
+      {intro.body}
+    </div>
+    <div className="btnRow" style={{ justifyContent: "center", marginTop: 16 }}>
+      <button
+        className="btn btnPrimary"
+        onClick={() => {
+          const fn = pendingStartRef.current;
+          setIntro(null);
+          pendingStartRef.current = null;
+          fn?.();
+        }}
+      >
+        Үргэлжлүүлэх
+      </button>
+    </div>
+  </div>
+)}
+
+        {phase === "idle" && !message && !intro && (
+
           <div>
             <div className="bigText">Бэлэн үү?</div>
             <div className="smallNote">Эхлэх дээр дарна уу.</div>
