@@ -83,6 +83,24 @@ export default function TestPage() {
   const [intro, setIntro] = useState<IntroState>(null);
   const pendingStartRef = useRef<null | (() => void)>(null);
 
+  const [flash, setFlash] = useState<null | "good" | "bad">(null);
+const flashTimerRef = useRef<number | null>(null);
+
+function triggerFeedback(isCorrect: boolean) {
+  // clear previous
+  if (flashTimerRef.current) window.clearTimeout(flashTimerRef.current);
+
+  setFlash(isCorrect ? "good" : "bad");
+
+  // (optional) vibration on mobile
+  if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+    navigator.vibrate(isCorrect ? 20 : [40, 30, 40]);
+  }
+
+  flashTimerRef.current = window.setTimeout(() => setFlash(null), 180);
+}
+
+
   const [phase, setPhase] = useState<Phase>("idle");
   const [crtIndex, setCrtIndex] = useState(0);
   const [crtStimuli, setCrtStimuli] = useState<CRTStimulus[]>([]);
@@ -227,6 +245,10 @@ function openStroopIntro() {
 
     recordAnswer(answer, correctAnswer, stimulusLabel);
 
+    const isCorrectNow = answer === correctAnswer;
+triggerFeedback(isCorrectNow);
+
+
     const next = crtTrial + 1;
     if (next >= crtStimuli.length) {
       finishCRTSection(currentStage);
@@ -255,6 +277,9 @@ function openStroopIntro() {
     const correctAnswer = currentStroop.inkName;
     const stimulusLabel = `${currentStroop.word}|${currentStroop.inkName}|${currentStroop.condition}`;
     recordAnswer(inkName, correctAnswer, stimulusLabel);
+    const isCorrectNow = inkName === correctAnswer;
+triggerFeedback(isCorrectNow);
+
 
     const next = stroopTrial + 1;
     if (next >= stroopStimuli.length) {
@@ -280,6 +305,10 @@ function openStroopIntro() {
 
   // Keyboard support
   useEffect(() => {
+
+    return () => {
+    if (flashTimerRef.current) window.clearTimeout(flashTimerRef.current);
+  };
     function onKey(e: KeyboardEvent) {
       if (phase === "crt") {
         if (e.key === "ArrowLeft") handleCRTAnswer(leftLabel);
@@ -385,7 +414,13 @@ useEffect(() => {
 
       {message && <div className="toast">{message}</div>}
 
-      <div className="stimulusBox">
+      <div
+  className={
+    "stimulusBox " +
+    (flash === "good" ? "flashGood" : flash === "bad" ? "flashBad" : "")
+  }
+>
+
 
         {phase === "intro" && intro && (
   <div style={{ textAlign: "center", maxWidth: 700 }}>
