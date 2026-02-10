@@ -330,15 +330,16 @@ export const STROOP_COLORS = [
   { name: "Шар", css: "#ffd24d" },
 ] as const;
 
-export const STROOP_WORDS = ["УЛААН","ЦЭНХЭР","НОГООН","ШАР"] as const;
+//aa
+//export const STROOP_WORDS = ["УЛААН","ЦЭНХЭР","НОГООН","ШАР"] as const;
 
 export function makeStroopTrials(total: number = 60): StroopStimulus[] {
-  // Balanced: 1/3 congruent, 1/3 incongruent, 1/3 neutral (e.g., "####")
-  const each = Math.floor(total / 3);
+  // 50% congruent, 50% incongruent
+  const half = Math.floor(total / 2);
   const out: StroopStimulus[] = [];
 
   // congruent
-  for (let i = 0; i < each; i++) {
+  for (let i = 0; i < half; i++) {
     const idx = Math.floor(Math.random() * STROOP_COLORS.length);
     out.push({
       word: STROOP_WORDS[idx],
@@ -349,7 +350,7 @@ export function makeStroopTrials(total: number = 60): StroopStimulus[] {
   }
 
   // incongruent
-  for (let i = 0; i < each; i++) {
+  for (let i = 0; i < total - half; i++) {
     const wordIdx = Math.floor(Math.random() * STROOP_COLORS.length);
     let inkIdx = Math.floor(Math.random() * STROOP_COLORS.length);
     while (inkIdx === wordIdx) inkIdx = Math.floor(Math.random() * STROOP_COLORS.length);
@@ -361,16 +362,6 @@ export function makeStroopTrials(total: number = 60): StroopStimulus[] {
     });
   }
 
-  // neutral
-  for (let i = 0; i < total - 2 * each; i++) {
-    const inkIdx = Math.floor(Math.random() * STROOP_COLORS.length);
-    out.push({
-      word: "####",
-      ink: STROOP_COLORS[inkIdx].css,
-      inkName: STROOP_COLORS[inkIdx].name,
-      condition: "neutral",
-    });
-  }
-
   return shuffle(out);
 }
+
