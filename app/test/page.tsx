@@ -87,17 +87,18 @@ export default function TestPage() {
 const flashTimerRef = useRef<number | null>(null);
 
 function triggerFeedback(isCorrect: boolean) {
-  // clear previous
-  if (flashTimerRef.current) window.clearTimeout(flashTimerRef.current);
+  // өмнөх timer байвал цэвэрлээд, шинэ флаш эхлүүлнэ
+  if (flashTimerRef.current !== null) {
+    window.clearTimeout(flashTimerRef.current);
+    flashTimerRef.current = null;
+  }
 
   setFlash(isCorrect ? "good" : "bad");
 
-  // (optional) vibration on mobile
-  if (typeof navigator !== "undefined" && "vibrate" in navigator) {
-    navigator.vibrate(isCorrect ? 20 : [40, 30, 40]);
-  }
-
-  flashTimerRef.current = window.setTimeout(() => setFlash(null), 180);
+  flashTimerRef.current = window.setTimeout(() => {
+    setFlash(null);
+    flashTimerRef.current = null;
+  }, 180);
 }
 
 
@@ -304,28 +305,40 @@ triggerFeedback(isCorrectNow);
   }
 
   // Keyboard support
-  useEffect(() => {
 
-    return () => {
-    if (flashTimerRef.current) window.clearTimeout(flashTimerRef.current);
-  };
-    function onKey(e: KeyboardEvent) {
-      if (phase === "crt") {
-        if (e.key === "ArrowLeft") handleCRTAnswer(leftLabel);
-        if (e.key === "ArrowRight") handleCRTAnswer(rightLabel);
-      }
-      // Stroop: keys 1-4 for colors
-      if (phase === "stroop") {
-        if (e.key === "1") handleStroopAnswer(STROOP_COLORS[0].name);
-        if (e.key === "2") handleStroopAnswer(STROOP_COLORS[1].name);
-        if (e.key === "3") handleStroopAnswer(STROOP_COLORS[2].name);
-        if (e.key === "4") handleStroopAnswer(STROOP_COLORS[3].name);
-      }
+  useEffect(() => {
+  return () => {
+    if (flashTimerRef.current !== null) {
+      window.clearTimeout(flashTimerRef.current);
+      flashTimerRef.current = null;
     }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, leftLabel, rightLabel, stroopTrial, crtTrial]);
+  };
+}, []);
+
+  // useEffect(() => {
+
+    
+  //   function onKey(e: KeyboardEvent) {
+  //     if (phase === "crt") {
+  //       if (e.key === "ArrowLeft") handleCRTAnswer(leftLabel);
+  //       if (e.key === "ArrowRight") handleCRTAnswer(rightLabel);
+  //     }
+  //     // Stroop: keys 1-4 for colors
+  //     if (phase === "stroop") {
+  //       if (e.key === "1") handleStroopAnswer(STROOP_COLORS[0].name);
+  //       if (e.key === "2") handleStroopAnswer(STROOP_COLORS[1].name);
+  //       if (e.key === "3") handleStroopAnswer(STROOP_COLORS[2].name);
+  //       if (e.key === "4") handleStroopAnswer(STROOP_COLORS[3].name);
+  //     }
+  //   }
+
+  //   return () => {
+  //   if (flashTimerRef.current) window.clearTimeout(flashTimerRef.current);
+  // };
+  //   window.addEventListener("keydown", onKey);
+  //   return () => window.removeEventListener("keydown", onKey);
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [phase, leftLabel, rightLabel, stroopTrial, crtTrial]);
 
 // Save session once when completed
 useEffect(() => {
