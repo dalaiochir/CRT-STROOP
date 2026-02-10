@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { clearHistory, loadHistory } from "@/lib/storage";
 import { formatDate, formatMs } from "@/lib/stats";
 import type { TestSession } from "@/lib/types";
-import Link from "next/link";
 
-//aaaaaa
 export default function HistoryPage() {
   const [sessions, setSessions] = useState<TestSession[]>([]);
 
@@ -26,9 +25,14 @@ export default function HistoryPage() {
       <div className="testHeader">
         <div>
           <h1 className="h1">Тестийн түүх</h1>
-          <p className="p">Нийт хадгалсан: <b>{totalSessions}</b></p>
+          <p className="p">
+            Нийт хадгалсан: <b>{totalSessions}</b> • Нэг сешн = CRT(8×40) + Stroop(60) ={" "}
+            <b>380</b> trial
+          </p>
         </div>
-        <button className="btn btnDanger" onClick={onClear}>Бүгдийг устгах</button>
+        <button className="btn btnDanger" onClick={onClear}>
+          Бүгдийг устгах
+        </button>
       </div>
 
       <hr className="hr" />
@@ -47,31 +51,50 @@ export default function HistoryPage() {
           </thead>
           <tbody>
             {sessions.map((s) => {
-              const crtAcc = s.crt.reduce((a, sec) => a + sec.summary.accuracy, 0) / s.crt.length;
-              const crtMean = s.crt.reduce((a, sec) => a + sec.summary.meanRtMs, 0) / s.crt.length;
+              const crtAcc =
+                s.crt.length === 0
+                  ? 0
+                  : s.crt.reduce((a, sec) => a + sec.summary.accuracy, 0) /
+                    s.crt.length;
+
+              const crtMean =
+                s.crt.length === 0
+                  ? 0
+                  : s.crt.reduce((a, sec) => a + sec.summary.meanRtMs, 0) /
+                    s.crt.length;
+
               const stroop = s.stroop?.summary;
+
               return (
                 <tr key={s.id}>
                   <td className="mono">{formatDate(s.createdAt)}</td>
                   <td>
-                    <div><b>Acc:</b> {(crtAcc * 100).toFixed(1)}%</div>
-                    <div><b>Mean RT:</b> {formatMs(crtMean)}</div>
+                    <div>
+                      <b>Acc:</b> {(crtAcc * 100).toFixed(1)}%
+                    </div>
+                    <div>
+                      <b>Mean RT:</b> {formatMs(crtMean)}
+                    </div>
                   </td>
                   <td>
                     {stroop ? (
                       <>
-                        <div><b>Acc:</b> {(stroop.accuracy * 100).toFixed(1)}%</div>
-                        <div><b>Mean RT:</b> {formatMs(stroop.meanRtMs)}</div>
+                        <div>
+                          <b>Acc:</b> {(stroop.accuracy * 100).toFixed(1)}%
+                        </div>
+                        <div>
+                          <b>Mean RT:</b> {formatMs(stroop.meanRtMs)}
+                        </div>
                       </>
                     ) : (
                       <span className="p">—</span>
                     )}
+                  </td>
                   <td>
-  <Link className="btn btnGhost" href={`/history/${s.id}`}>
-    Дэлгэрэнгүй харах
-  </Link>
-</td>
-
+                    <Link className="btn btnGhost" href={`/history/${s.id}`}>
+                      Дэлгэрэнгүй харах
+                    </Link>
+                  </td>
                 </tr>
               );
             })}
@@ -81,7 +104,8 @@ export default function HistoryPage() {
 
       <hr className="hr" />
       <p className="smallNote">
-        Сануулга: History өгөгдөл нь зөвхөн таны браузерт хадгалагдана (server рүү илгээгдэхгүй).
+        Сануулга: History өгөгдөл нь зөвхөн таны браузерт хадгалагдана (server рүү
+        илгээгдэхгүй).
       </p>
     </div>
   );
