@@ -322,3 +322,146 @@ button{ font-family:inherit; }
   50% { transform: scale(1.01); }
   100% { transform: scale(1); }
 }
+
+/* =========================
+   Responsive (Tablet/Mobile)
+   ========================= */
+
+:root {
+  --maxw: 980px;
+}
+
+/* Base container tweaks */
+.container {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* Navbar: wrap on small screens */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.navLinks {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Buttons row: allow wrap */
+.btnRow {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Tables: never break layout on small screens */
+.tableWrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Make stimulus area responsive */
+.stimulusBox {
+  width: 100%;
+  min-height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+/* Prevent giant texts on small screens */
+.bigText {
+  font-size: clamp(28px, 6.2vw, 56px);
+  line-height: 1.1;
+  text-align: center;
+  word-break: break-word;
+}
+
+/* Pills wrap nicely */
+.pill {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Header blocks stack on small screens */
+.testHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* -------------------------
+   Tablet (<= 1024px)
+   ------------------------- */
+@media (max-width: 1024px) {
+  .container { padding: 14px; }
+  .card { padding: 16px; }
+  .stimulusBox { min-height: 240px; }
+  .btn { min-width: 160px; }
+}
+
+/* -------------------------
+   Mobile (<= 768px)
+   ------------------------- */
+@media (max-width: 768px) {
+  .container { padding: 12px; }
+  .card { padding: 14px; border-radius: 16px; }
+
+  /* Navbar center + full width links */
+  .navbar { align-items: center; }
+  .navLinks { width: 100%; justify-content: center; }
+
+  /* Buttons become full-width stacked */
+  .btnRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .btn {
+    width: 100%;
+    min-width: unset;
+    min-height: 60px;
+    font-size: 18px;
+    padding: 18px 18px;
+  }
+
+  /* Stimulus box a bit smaller */
+  .stimulusBox {
+    min-height: 220px;
+    padding: 14px;
+  }
+
+  /* Make tables readable */
+  .table {
+    font-size: 14px;
+  }
+  .mono { font-size: 13px; }
+
+  /* Make long history/test pages not cramped */
+  .h1 { font-size: 26px; }
+  .h2 { font-size: 20px; }
+  .p  { font-size: 15px; }
+}
+
+/* -------------------------
+   Small Mobile (<= 420px)
+   ------------------------- */
+@media (max-width: 420px) {
+  .container { padding: 10px; }
+  .card { padding: 12px; }
+  .btn { min-height: 56px; font-size: 17px; }
+  .stimulusBox { min-height: 200px; }
+  .bigText { font-size: clamp(26px, 7vw, 44px); }
+}
+

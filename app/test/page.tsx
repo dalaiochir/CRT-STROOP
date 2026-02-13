@@ -581,7 +581,7 @@ fetch("/api/submit", {
             )}
             {currentCRTStimulus.type === "arrowPos" && (
   <div style={{ width: "100%", height: "100%", position: "relative" }}>
-    
+
     {/* === Дээд / Доод зааг === */}
     <div className="dividerLine" />
 
