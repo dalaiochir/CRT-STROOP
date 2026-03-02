@@ -436,6 +436,20 @@ button{ font-family:inherit; }
     padding: 18px 18px;
   }
 
+  .input{
+  width:100%;
+  padding:14px 14px;
+  border-radius:14px;
+  border:1px solid var(--border);
+  background: rgba(255,255,255,.06);
+  color: var(--text);
+  outline:none;
+  font-size:16px;
+}
+.input:focus{
+  border-color: rgba(255,255,255,.35);
+}
+
   /* Stimulus box a bit smaller */
   .stimulusBox {
     min-height: 220px;
