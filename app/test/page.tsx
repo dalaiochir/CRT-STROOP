@@ -548,6 +548,7 @@ export default function TestPage() {
 
       {message && <div className="toast">{message}</div>}
 
+<div className="testShell">
       <div
         className={
           "stimulusBox " +
@@ -774,33 +775,37 @@ export default function TestPage() {
           </div>
         )}
       </div>
+      </div>
 
-      {/* Controls */}
-      {phase === "crt" && (
-        <div className="btnRow" style={{ justifyContent: "center" }}>
-          <button className="btn" onClick={() => handleCRTAnswer(leftLabel)}>
-            ← {leftLabel}
-          </button>
-          <button className="btn" onClick={() => handleCRTAnswer(rightLabel)}>
-            {rightLabel} →
-          </button>
-        </div>
-      )}
-
-      {phase === "stroop" && (
-        <div className="btnRow" style={{ justifyContent: "center" }}>
-          {STROOP_COLORS.map((c, i) => (
-            <button
-              key={c.name}
-              className="btn"
-              onClick={() => handleStroopAnswer(c.name)}
-              title={`Key ${i + 1}`}
-            >
-              <span className="kbd">{i + 1}</span> {c.name}
+       {/* Controls */}
+      <div className="mobileControls">
+        {phase === "crt" && (
+          <div className="crtControls">
+            <button className="btn" onClick={() => handleCRTAnswer(leftLabel)}>
+              ← {leftLabel}
             </button>
-          ))}
-        </div>
-      )}
+            <button className="btn" onClick={() => handleCRTAnswer(rightLabel)}>
+              {rightLabel} →
+            </button>
+          </div>
+        )}
+
+        {phase === "stroop" && (
+          <div className="stroopGrid">
+            {STROOP_COLORS.map((c, i) => (
+              <button
+                key={c.name}
+                className="btn"
+                onClick={() => handleStroopAnswer(c.name)}
+                title={`Key ${i + 1}`}
+              >
+                <span className="kbd">{i + 1}</span> {c.name}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
 
       <hr className="hr" />
       <p className="smallNote">
