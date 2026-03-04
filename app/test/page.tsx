@@ -777,7 +777,36 @@ export default function TestPage() {
       </div>
       </div>
 
-       {/* Controls */}
+      {/* Controls
+      {phase === "crt" && (
+        <div className="btnRow" style={{ justifyContent: "center" }}>
+          <button className="btn" onClick={() => handleCRTAnswer(leftLabel)}>
+            ← {leftLabel}
+          </button>
+          <button className="btn" onClick={() => handleCRTAnswer(rightLabel)}>
+            {rightLabel} →
+          </button>
+        </div>
+      )}
+
+      {phase === "stroop" && (
+        <div className="btnRow" style={{ justifyContent: "center" }}>
+          {STROOP_COLORS.map((c, i) => (
+            <button
+              key={c.name}
+              className="btn"
+              onClick={() => handleStroopAnswer(c.name)}
+              title={`Key ${i + 1}`}
+            >
+              <span className="kbd">{i + 1}</span> {c.name}
+            </button>
+          ))}
+        </div>
+      )}
+
+      <hr className="hr" /> */}
+
+      {/* Controls */}
       <div className="mobileControls">
         {phase === "crt" && (
           <div className="crtControls">
@@ -807,7 +836,8 @@ export default function TestPage() {
       </div>
     </div>
 
-      <hr className="hr" />
+    <hr className="hr" />
+    
       <p className="smallNote">
         CRT: <span className="kbd">←</span>/<span className="kbd">→</span> • Stroop:{" "}
         <span className="kbd">1</span>-<span className="kbd">4</span>
