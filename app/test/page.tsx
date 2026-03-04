@@ -544,7 +544,6 @@ export default function TestPage() {
             {phase === "done" ? "Дахин эхлэх" : "Эхлэх"}
           </button>
         )}
-      </div>
 
       {message && <div className="toast">{message}</div>}
 
@@ -775,7 +774,7 @@ export default function TestPage() {
           </div>
         )}
       </div>
-      </div>
+      
 
       {/* Controls
       {phase === "crt" && (
@@ -835,9 +834,9 @@ export default function TestPage() {
         )}
       </div>
     </div>
-
+</div>
     <hr className="hr" />
-    
+
       <p className="smallNote">
         CRT: <span className="kbd">←</span>/<span className="kbd">→</span> • Stroop:{" "}
         <span className="kbd">1</span>-<span className="kbd">4</span>
