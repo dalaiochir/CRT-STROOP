@@ -569,5 +569,13 @@ button{ font-family:inherit; }
   }
 }
 
+body[data-testing="true"] .nav,
+body[data-testing="true"] .footer {
+  display: none !important;
+}
 
+body[data-testing="true"] .container {
+  width: min(1100px, calc(100% - 20px));
+  margin: 10px auto 20px;
+}
 

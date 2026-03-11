@@ -25,11 +25,9 @@ export const viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="mn">
-      <body>
+      <body id="app-body">
         <Navbar />
-        <main className="container">
-          {children}
-        </main>
+        <main className="container">{children}</main>
         <footer className="footer">
           <span>© {new Date().getFullYear()} CRT + Stroop</span>
         </footer>

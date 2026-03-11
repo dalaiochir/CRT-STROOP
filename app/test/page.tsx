@@ -173,6 +173,29 @@ export default function TestPage() {
   const stroopEndAtRef = useRef<number>(0);
   const stroopTimerRef = useRef<number | null>(null);
 
+  useEffect(() => {
+  const body = document.getElementById("app-body");
+  if (!body) return;
+
+  const isTesting =
+    phase === "participant" ||
+    phase === "cerq" ||
+    phase === "intro" ||
+    phase === "crt" ||
+    phase === "break" ||
+    phase === "stroop";
+
+  if (isTesting) {
+    body.setAttribute("data-testing", "true");
+  } else {
+    body.removeAttribute("data-testing");
+  }
+
+  return () => {
+    body.removeAttribute("data-testing");
+  };
+}, [phase]);
+
   // Cleanup timers
   useEffect(() => {
     return () => {
