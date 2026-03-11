@@ -614,71 +614,108 @@ export default function TestPage() {
 
         {/* CERQ */}
         {phase === "cerq" && (
-          <div style={{ width: "100%", maxWidth: 820 }}>
-            <div className="pill" style={{ justifyContent: "center" }}>
-              <span>Асуулт</span>
-              <b>
-                {Math.min(cerqIndex + 1, 36)}/36
-              </b>
-            </div>
+  <div className="cerqWrap">
+    <div className="pill" style={{ justifyContent: "center" }}>
+      <span>Асуулт</span>
+      <b>{cerqIndex + 1}/36</b>
+    </div>
 
-            <div className="card" style={{ marginTop: 12 }}>
-              <div className="smallNote" style={{ marginBottom: 10 }}>
-                1-Хэзээ ч үгүй · 2-Ховор · 3-Заримдаа · 4-Ихэвчлэн · 5-Үргэлж
-              </div>
+    <div className="cerqProgressBar">
+      <div
+        className="cerqProgressFill"
+        style={{ width: `${((cerqIndex + 1) / 36) * 100}%` }}
+      />
+    </div>
 
-              <div className="bigText" style={{ fontSize: 22, lineHeight: 1.25 }}>
-                {CERQ_QUESTIONS[cerqIndex]}
-              </div>
+    <div className="card cerqQuestionCard" style={{ marginTop: 12 }}>
+      <div className="smallNote" style={{ marginBottom: 10 }}>
+        Дараах хуваарийг ашиглан хариулна уу
+      </div>
 
-              <div className="btnRow" style={{ justifyContent: "center", marginTop: 16 }}>
-                {[1, 2, 3, 4, 5].map((v) => (
-                  <button
-                    key={v}
-                    className={"btn " + (cerqAnswers[cerqIndex] === v ? "btnPrimary" : "")}
-                    onClick={() => {
-                      const next = [...cerqAnswers];
-                      next[cerqIndex] = v;
-                      setCerqAnswers(next);
+      <div className="cerqScaleHint">
+        <div className="cerqScaleHintItem">1 = Хэзээ ч үгүй</div>
+        <div className="cerqScaleHintItem">2 = Ховор</div>
+        <div className="cerqScaleHintItem">3 = Заримдаа</div>
+        <div className="cerqScaleHintItem">4 = Ихэвчлэн</div>
+        <div className="cerqScaleHintItem">5 = Үргэлж</div>
+      </div>
 
-                      if (cerqIndex < 35) setCerqIndex(cerqIndex + 1);
-                    }}
-                  >
-                    {v}
-                  </button>
-                ))}
-              </div>
+      <div className="bigText" style={{ fontSize: 22, lineHeight: 1.3, marginTop: 14 }}>
+        {CERQ_QUESTIONS[cerqIndex]}
+      </div>
 
-              <div className="btnRow" style={{ justifyContent: "space-between", marginTop: 16 }}>
-                <button
-                  className="btn"
-                  disabled={cerqIndex === 0}
-                  onClick={() => setCerqIndex(cerqIndex - 1)}
-                >
-                  ← Өмнөх
-                </button>
+      <div className="cerqSegmented">
+        {[
+          { value: 1, label: "Хэзээ ч" },
+          { value: 2, label: "Ховор" },
+          { value: 3, label: "Заримдаа" },
+          { value: 4, label: "Ихэвчлэн" },
+          { value: 5, label: "Үргэлж" },
+        ].map((item) => (
+          <button
+            key={item.value}
+            type="button"
+            className={
+              "cerqSegment " +
+              (cerqAnswers[cerqIndex] === item.value ? "cerqSegmentActive" : "")
+            }
+            onClick={() => {
+              const next = [...cerqAnswers];
+              next[cerqIndex] = item.value;
+              setCerqAnswers(next);
 
-                <button
-                  className="btn btnPrimary"
-                  disabled={!cerqDone}
-                  onClick={() => {
-                    setMessage("Туршилт удахгүй эхэлнэ...");
-                    setPhase("idle");
-                    setTimeout(() => openCRTIntro("CRT1"), 1200);
-                  }}
-                >
-                  Туршилт эхлэх
-                </button>
-              </div>
+              if (cerqIndex < 35) {
+                setTimeout(() => setCerqIndex((prev) => prev + 1), 120);
+              }
+            }}
+          >
+            <span className="cerqSegmentNum">{item.value}</span>
+            <span className="cerqSegmentLabel">{item.label}</span>
+          </button>
+        ))}
+      </div>
 
-              {!cerqDone && (
-                <p className="smallNote" style={{ marginTop: 10 }}>
-                  Бүх 36 асуултад хариулсны дараа “Туршилт эхлэх” идэвхжинэ.
-                </p>
-              )}
-            </div>
-          </div>
-        )}
+      <div className="cerqBottomBar">
+        <button
+          className="btn"
+          disabled={cerqIndex === 0}
+          onClick={() => setCerqIndex(cerqIndex - 1)}
+        >
+          ← Өмнөх
+        </button>
+
+        <button
+          className="btn"
+          disabled={cerqIndex === 35}
+          onClick={() => {
+            if (cerqAnswers[cerqIndex] >= 1 && cerqAnswers[cerqIndex] <= 5) {
+              setCerqIndex(cerqIndex + 1);
+            }
+          }}
+        >
+          Дараах →
+        </button>
+
+        <button
+          className="btn btnPrimary"
+          disabled={!cerqDone}
+          onClick={() => {
+            setMessage("Туршилт удахгүй эхэлнэ...");
+            setPhase("idle");
+            setTimeout(() => openCRTIntro("CRT1"), 1200);
+          }}
+        >
+          Туршилт эхлэх
+        </button>
+      </div>
+
+      <p className="smallNote" style={{ marginTop: 10 }}>
+        Сонгосон хариулт:{" "}
+        <b>{cerqAnswers[cerqIndex] ? cerqAnswers[cerqIndex] : "Сонгоогүй"}</b>
+      </p>
+    </div>
+  </div>
+)}
 
         {/* INTRO */}
         {phase === "intro" && intro && (

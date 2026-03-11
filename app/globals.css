@@ -568,3 +568,142 @@ button{ font-family:inherit; }
     line-height: 1.1;
   }
 }
+
+
+/* ===== CERQ mobile segmented UI ===== */
+
+.cerqWrap {
+  width: 100%;
+  max-width: 820px;
+}
+
+.cerqQuestionCard {
+  width: 100%;
+}
+
+.cerqScaleHint {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.cerqScaleHintItem {
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.cerqSegmented {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.cerqSegment {
+  min-height: 58px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.05);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: .15s ease;
+  font-weight: 700;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.cerqSegment:hover {
+  background: rgba(255,255,255,.08);
+}
+
+.cerqSegmentActive {
+  border-color: rgba(124,156,255,.65);
+  background: rgba(124,156,255,.18);
+  box-shadow: 0 0 0 4px rgba(124,156,255,.12);
+}
+
+.cerqSegmentNum {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.cerqSegmentLabel {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.cerqBottomBar {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+
+.cerqProgressBar {
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.08);
+  overflow: hidden;
+  margin-top: 12px;
+}
+
+.cerqProgressFill {
+  height: 100%;
+  background: rgba(124,156,255,.75);
+  border-radius: 999px;
+  transition: width .2s ease;
+}
+
+@media (max-width: 768px) {
+  .cerqWrap {
+    max-width: 100%;
+  }
+
+  .cerqQuestionCard {
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .cerqSegmented {
+    gap: 8px;
+  }
+
+  .cerqSegment {
+    min-height: 64px;
+    border-radius: 14px;
+  }
+
+  .cerqSegmentNum {
+    font-size: 20px;
+  }
+
+  .cerqSegmentLabel {
+    font-size: 10px;
+  }
+
+  .cerqScaleHint {
+    display: none;
+  }
+
+  .cerqBottomBar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cerqBottomBar .btn {
+    width: 100%;
+  }
+}
