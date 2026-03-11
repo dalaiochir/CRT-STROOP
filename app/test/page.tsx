@@ -548,8 +548,57 @@ export default function TestPage() {
 
       {message && <div className="toast">{message}</div>}
 
+      {/* PARTICIPANT */}
+        {phase === "participant" && (
+          <div style={{ width: "100%", maxWidth: 520 }}>
+            <div className="toast" style={{ marginBottom: 10 }}>
+              Нас, хүйсээ оруулаад үргэлжлүүлнэ үү.
+            </div>
 
-{/* CERQ */}
+            <div className="card" style={{ padding: 14 }}>
+              <label className="p">Нас</label>
+              <input
+                className="input"
+                type="number"
+                value={age}
+                min={10}
+                max={99}
+                onChange={(e) => setAge(e.target.value ? Number(e.target.value) : "")}
+              />
+
+              <div style={{ height: 12 }} />
+
+              <label className="p">Хүйс</label>
+              <select
+                className="input"
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+              >
+                <option value="">Сонгох</option>
+                <option value="male">Эр</option>
+                <option value="female">Эм</option>
+                <option value="other">Бусад</option>
+                <option value="na">Хэлэхгүй</option>
+              </select>
+
+              <div className="btnRow" style={{ justifyContent: "center", marginTop: 16 }}>
+                <button
+                  className="btn btnPrimary"
+                  disabled={age === "" || !gender}
+                  onClick={() => setPhase("cerq")}
+                >
+                  Дараагийн алхам
+                </button>
+              </div>
+
+              <p className="smallNote" style={{ marginTop: 10 }}>
+                Мэдээлэл зөвхөн судалгааны үр дүн тооцоололд ашиглагдана.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* CERQ */}
         {phase === "cerq" && (
           <div style={{ width: "100%", maxWidth: 820 }}>
             <div className="pill" style={{ justifyContent: "center" }}>
@@ -617,7 +666,6 @@ export default function TestPage() {
           </div>
         )}
 
-
 {phase !== "cerq" && phase !== "participant" && (
       <div
         className={
@@ -630,56 +678,6 @@ export default function TestPage() {
           <div>
             <div className="bigText">Бэлэн үү?</div>
             <div className="smallNote">Эхлэх дээр дарна уу.</div>
-          </div>
-        )}
-
-        {/* PARTICIPANT */}
-        {phase === "participant" && (
-          <div style={{ width: "100%", maxWidth: 520 }}>
-            <div className="toast" style={{ marginBottom: 10 }}>
-              Нас, хүйсээ оруулаад үргэлжлүүлнэ үү.
-            </div>
-
-            <div className="card" style={{ padding: 14 }}>
-              <label className="p">Нас</label>
-              <input
-                className="input"
-                type="number"
-                value={age}
-                min={10}
-                max={99}
-                onChange={(e) => setAge(e.target.value ? Number(e.target.value) : "")}
-              />
-
-              <div style={{ height: 12 }} />
-
-              <label className="p">Хүйс</label>
-              <select
-                className="input"
-                value={gender}
-                onChange={(e) => setGender(e.target.value)}
-              >
-                <option value="">Сонгох</option>
-                <option value="male">Эр</option>
-                <option value="female">Эм</option>
-                <option value="other">Бусад</option>
-                <option value="na">Хэлэхгүй</option>
-              </select>
-
-              <div className="btnRow" style={{ justifyContent: "center", marginTop: 16 }}>
-                <button
-                  className="btn btnPrimary"
-                  disabled={age === "" || !gender}
-                  onClick={() => setPhase("cerq")}
-                >
-                  Дараагийн алхам
-                </button>
-              </div>
-
-              <p className="smallNote" style={{ marginTop: 10 }}>
-                Мэдээлэл зөвхөн судалгааны үр дүн тооцоололд ашиглагдана.
-              </p>
-            </div>
           </div>
         )}
 
