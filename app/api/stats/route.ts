@@ -11,9 +11,7 @@ export async function GET() {
       AVG(crt_accuracy) AS avg_crt_accuracy,
       AVG(crt_mean_rt_ms) AS avg_crt_mean_rt_ms,
       AVG(stroop_accuracy) AS avg_stroop_accuracy,
-      AVG(stroop_mean_rt_ms) AS avg_stroop_mean_rt_ms,
-      AVG(cerq_adaptive_mean) AS avg_cerq_adaptive_mean,
-      AVG(cerq_maladaptive_mean) AS avg_cerq_maladaptive_mean
+      AVG(stroop_mean_rt_ms) AS avg_stroop_mean_rt_ms
     FROM test_sessions_summary;
   `);
 

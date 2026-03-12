@@ -475,23 +475,23 @@ export default function TestPage() {
       const cerqScores = cerqDone ? computeCerqScores(cerqAnswers as any) : null;
 
       fetch("/api/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          participantId,
-          totalTrials: 380,
-          age: age === "" ? null : age,
-          gender: gender || null,
-          cerq: cerqScores,
-          crt: { accuracy: crtAcc, meanRtMs: crtMeanRt },
-          stroop: { accuracy: stroopAcc, meanRtMs: stroopMeanRt },
-          meta: {
-            userAgent: navigator.userAgent,
-            screenW: window.innerWidth,
-            screenH: window.innerHeight,
-          },
-        }),
-      }).catch(() => {});
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    crt: {
+      accuracy: crtAcc,
+      meanRtMs: crtMeanRt,
+    },
+    stroop: {
+      accuracy: stroopAcc,
+      meanRtMs: stroopMeanRt,
+    },
+    age: age === "" ? null : age,
+    gender: gender || null,
+    education: education || null,
+    cerqAnswers,
+  }),
+}).catch(() => {});
     } catch {
       // ignore
     }
@@ -644,8 +644,7 @@ export default function TestPage() {
             <div className="pill" style={{ justifyContent: "center" }}>
 
 <p className="p" style={{ textAlign: "center", marginTop: 10 }}>
-  Стресст өртөх, түгшүүр мэдрэх, өвдөх зэрэг таагүй үйл явдалд тохиолдоход
-  үед та юу гэж боддог вэ?
+  Стресст өртөх, түгшүүр мэдрэх, өвдөх зэрэг таагүй үйл явдал тохиолдох үед та юу гэж боддог вэ?
 </p>
 
               <span>Асуулт</span>
