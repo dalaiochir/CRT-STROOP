@@ -720,8 +720,12 @@ export default function TestPage() {
         {/* INTRO */}
         {phase === "intro" && intro && (
           <div style={{ textAlign: "center", maxWidth: 720 }}>
-            <div className="introTitle">{intro.title}</div>
-<div className="toast introBody">{intro.body}</div>
+            <div className="bigText" style={{ fontSize: 34 }}>
+  {intro.title}
+</div>
+<div className="toast" style={{ whiteSpace: "pre-line", marginTop: 12 }}>
+  {intro.body}
+</div>
             <div className="btnRow" style={{ justifyContent: "center", marginTop: 16 }}>
               <button
                 className="btn btnPrimary"

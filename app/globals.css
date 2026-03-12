@@ -579,7 +579,7 @@ body[data-testing="true"] .container {
   margin: 10px auto 20px;
 }
 
-.cerqTitle {
+/* .cerqTitle {
   text-align: center;
   margin-bottom: 8px;
 }
@@ -598,4 +598,4 @@ body[data-testing="true"] .container {
   font-size: 20px;
   line-height: 1.45;
   color: var(--muted);
-}
+} */
