@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 
 const links = [
   { href: "/", label: "Нүүр" },
-  { href: "/instructions", label: "Заавар" },
+  // { href: "/instructions", label: "Заавар" },
   { href: "/test", label: "Тест" },
   { href: "/history", label: "Түүх" },
 ];
@@ -17,7 +17,7 @@ export default function Navbar() {
       <div className="navInner">
         <div className="brand">
           <span className="badge" />
-          <span>CRT + Stroop</span>
+          <span>CERQ + CRT + Stroop</span>
         </div>
         <nav className="navLinks">
           {links.map((l) => {
