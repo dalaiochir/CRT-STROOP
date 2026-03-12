@@ -115,6 +115,7 @@ export default function TestPage() {
   // Participant
   const [age, setAge] = useState<number | "">("");
   const [gender, setGender] = useState<string>("");
+  const [education, setEducation] = useState<string>("");
 
   // CERQ
   const [cerqIndex, setCerqIndex] = useState(0);
@@ -505,6 +506,7 @@ export default function TestPage() {
     // reset participant + cerq
     setAge("");
     setGender("");
+    setEducation("");
     setCerqIndex(0);
     setCerqAnswers(Array(36).fill(0));
 
@@ -548,18 +550,20 @@ export default function TestPage() {
       <div className="testHeader">
         <div>
           <h1 className="h1">{currentTitle}</h1>
-          <div className="pill">
-            <span>Progress</span>
-            <b>{progress}%</b>
-            <span className="mono">•</span>
-            <span className="smallNote">
-              {phase === "crt"
-                ? `Trial ${crtTrial + 1}/${crtStimuli.length}`
-                : phase === "stroop"
-                  ? `Time: ${stroopTimeLeft}s`
-                  : "—"}
-            </span>
-          </div>
+          {phase !== "participant" && phase !== "cerq" && (
+  <div className="pill">
+    <span>Progress</span>
+    <b>{progress}%</b>
+    <span className="mono">•</span>
+    <span className="smallNote">
+      {phase === "crt"
+        ? `Trial ${crtTrial + 1}/${crtStimuli.length}`
+        : phase === "stroop"
+          ? `Time: ${stroopTimeLeft}s`
+          : "—"}
+    </span>
+  </div>
+)}
         </div>
 
         {(phase === "idle" || phase === "done") && (
@@ -569,57 +573,67 @@ export default function TestPage() {
         )}
       </div>
 
-      {message && <div className="toast">{message}</div>}
+      {message && phase !== "participant" && <div className="toast">{message}</div>}
 
       {/* PARTICIPANT */}
         {phase === "participant" && (
-          <div style={{ width: "100%", maxWidth: 520 }}>
-            <div className="toast" style={{ marginBottom: 10 }}>
-              Нас, хүйсээ оруулаад үргэлжлүүлнэ үү.
-            </div>
+  <div style={{ width: "100%", maxWidth: 620 }}>
+    <div className="card" style={{ padding: 18 }}>
+      <label className="p">Нас</label>
+      <input
+        className="input"
+        type="number"
+        value={age}
+        min={10}
+        max={99}
+        onChange={(e) => setAge(e.target.value ? Number(e.target.value) : "")}
+      />
 
-            <div className="card" style={{ padding: 14 }}>
-              <label className="p">Нас</label>
-              <input
-                className="input"
-                type="number"
-                value={age}
-                min={10}
-                max={99}
-                onChange={(e) => setAge(e.target.value ? Number(e.target.value) : "")}
-              />
+      <div style={{ height: 12 }} />
 
-              <div style={{ height: 12 }} />
+      <label className="p">Хүйс</label>
+      <select
+        className="input"
+        value={gender}
+        onChange={(e) => setGender(e.target.value)}
+      >
+        <option value="">Сонгох</option>
+        <option value="male">Эр</option>
+        <option value="female">Эм</option>
+      </select>
 
-              <label className="p">Хүйс</label>
-              <select
-                className="input"
-                value={gender}
-                onChange={(e) => setGender(e.target.value)}
-              >
-                <option value="">Сонгох</option>
-                <option value="male">Эр</option>
-                <option value="female">Эм</option>
-                <option value="other">Бусад</option>
-                <option value="na">Хэлэхгүй</option>
-              </select>
+      <div style={{ height: 12 }} />
 
-              <div className="btnRow" style={{ justifyContent: "center", marginTop: 16 }}>
-                <button
-                  className="btn btnPrimary"
-                  disabled={age === "" || !gender}
-                  onClick={() => setPhase("cerq")}
-                >
-                  Дараагийн алхам
-                </button>
-              </div>
+      <label className="p">Боловсролын түвшин</label>
+      <select
+        className="input"
+        value={education}
+        onChange={(e) => setEducation(e.target.value)}
+      >
+        <option value="">Сонгох</option>
+        <option value="primary">Бага</option>
+        <option value="lower_secondary">Суурь</option>
+        <option value="upper_secondary">Бүрэн дунд</option>
+        <option value="college">МСҮТ болон коллеж</option>
+        <option value="university">Их дээд</option>
+      </select>
 
-              <p className="smallNote" style={{ marginTop: 10 }}>
-                Мэдээлэл зөвхөн судалгааны үр дүн тооцоололд ашиглагдана.
-              </p>
-            </div>
-          </div>
-        )}
+      <div className="btnRow" style={{ justifyContent: "center", marginTop: 18 }}>
+        <button
+          className="btn btnPrimary"
+          disabled={age === "" || !gender || !education}
+          onClick={() => setPhase("cerq")}
+        >
+          Дараагийн алхам
+        </button>
+      </div>
+
+      <p className="smallNote" style={{ marginTop: 10 }}>
+        Мэдээлэл зөвхөн судалгааны үр дүн тооцоололд ашиглагдана.
+      </p>
+    </div>
+  </div>
+)}
 
         {/* CERQ */}
         {phase === "cerq" && (

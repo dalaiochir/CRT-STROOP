@@ -8,6 +8,7 @@ type SubmitBody = {
   stroop: { accuracy: number; meanRtMs: number };
   age?: number;
   gender?: string;
+  education?: string;
   cerq?: {
     selfBlameMean: number;
     acceptanceMean: number;
@@ -34,7 +35,7 @@ export async function POST(req: Request) {
   await pool.query(
   `insert into test_sessions_summary
     (participant_id, total_trials, crt_accuracy, crt_mean_rt_ms, stroop_accuracy, stroop_mean_rt_ms,
-     age, gender,
+     age, gender, education
      cerq_self_blame_mean, cerq_acceptance_mean, cerq_rumination_mean,
      cerq_positive_refocusing_mean, cerq_refocus_planning_mean, cerq_positive_reappraisal_mean,
      cerq_putting_perspective_mean, cerq_catastrophizing_mean, cerq_blaming_others_mean,
@@ -42,12 +43,12 @@ export async function POST(req: Request) {
      user_agent, screen_w, screen_h)
    values
     ($1,$2,$3,$4,$5,$6,
-     $7,$8,
-     $9,$10,$11,
-     $12,$13,$14,
-     $15,$16,$17,
-     $18,$19,
-     $20,$21,$22)`,
+     $7,$8, $9
+     $10,$11,$12,
+     $13,$14,$15,
+     $16,$17,$18,
+     $19,$20,
+     $21,$22,$23)`,
   [
     body.participantId,
     body.totalTrials,
@@ -58,6 +59,7 @@ export async function POST(req: Request) {
 
     body.age ?? null,
     body.gender ?? null,
+    body.education ?? null,
 
     body.cerq?.selfBlameMean ?? null,
     body.cerq?.acceptanceMean ?? null,
