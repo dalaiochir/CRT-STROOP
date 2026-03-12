@@ -631,7 +631,7 @@ export default function TestPage() {
 
 <p className="p" style={{ textAlign: "center", marginTop: 10 }}>
   Стресст өртөх, түгшүүр мэдрэх, өвдөх зэрэг таагүй үйл явдалд тохиолдоход
-  үед та юу гэж боддог вэ? (Энгийн асуулт болгоны дээр байрлуулах)
+  үед та юу гэж боддог вэ?
 </p>
 
               <span>Асуулт</span>
@@ -676,17 +676,19 @@ export default function TestPage() {
                   ← Өмнөх
                 </button>
 
-                <button
-                  className="btn btnPrimary"
-                  disabled={!cerqDone}
-                  onClick={() => {
-                    setMessage("Туршилт удахгүй эхэлнэ...");
-                    setPhase("idle");
-                    setTimeout(() => openCRTIntro("CRT1"), 1200);
-                  }}
-                >
-                  Туршилт эхлэх
-                </button>
+                {cerqIndex === 35 && (
+  <button
+    className="btn btnPrimary"
+    disabled={!cerqDone}
+    onClick={() => {
+      setMessage("Туршилт удахгүй эхэлнэ...");
+      setPhase("idle");
+      setTimeout(() => openCRTIntro("CRT1"), 1200);
+    }}
+  >
+    Туршилт эхлэх
+  </button>
+)}
               </div>
 
               {!cerqDone && (
@@ -718,12 +720,8 @@ export default function TestPage() {
         {/* INTRO */}
         {phase === "intro" && intro && (
           <div style={{ textAlign: "center", maxWidth: 720 }}>
-            <div className="bigText" style={{ fontSize: 34 }}>
-              {intro.title}
-            </div>
-            <div className="toast" style={{ whiteSpace: "pre-line", marginTop: 12 }}>
-              {intro.body}
-            </div>
+            <div className="introTitle">{intro.title}</div>
+<div className="toast introBody">{intro.body}</div>
             <div className="btnRow" style={{ justifyContent: "center", marginTop: 16 }}>
               <button
                 className="btn btnPrimary"
@@ -838,11 +836,15 @@ export default function TestPage() {
         </div>
       )}
 
-      <hr className="hr" />
-      <p className="smallNote">
-        CRT: <span className="kbd">←</span>/<span className="kbd">→</span> • Stroop:{" "}
-        <span className="kbd">1</span>-<span className="kbd">4</span>
-      </p>
+      {(phase === "crt" || phase === "stroop" || phase === "intro" || phase === "break") && (
+  <>
+    <hr className="hr" />
+    <p className="smallNote">
+      CRT: <span className="kbd">←</span>/<span className="kbd">→</span> • Stroop:{" "}
+      <span className="kbd">1</span>-<span className="kbd">4</span>
+    </p>
+  </>
+)}
     </div>
   );
 }
