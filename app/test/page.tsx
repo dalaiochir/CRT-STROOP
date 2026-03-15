@@ -652,6 +652,8 @@ setTempAnswers({});
 
 {phase === "temperament" && (
   <div className="cerqWrap">
+    <h1 className="h1 cerqTitle">Темпераментийн асуулга</h1>
+
     <div className="pill" style={{ justifyContent: "center", marginTop: 10 }}>
       <span>Асуулт</span>
       <b>{tempIndex + 1}/24</b>
@@ -665,7 +667,9 @@ setTempAnswers({});
     </div>
 
     <div className="card cerqQuestionCard" style={{ marginTop: 12 }}>
-      <h1 className="h1 cerqTitle">Темпераментийн асуулга</h1>
+      <div className="smallNote" style={{ marginBottom: 10 }}>
+        1-Огт үгүй · 2-Ховор · 3-Заримдаа · 4-Ихэнхдээ · 5-Үргэлж
+      </div>
 
       <div className="bigText" style={{ fontSize: 22, lineHeight: 1.3, marginTop: 14 }}>
         {tempQuestions[tempIndex]?.text}
@@ -696,10 +700,6 @@ setTempAnswers({});
                 ...prev,
                 [current.code]: item.value,
               }));
-
-              if (tempIndex < tempQuestions.length - 1) {
-                setTimeout(() => setTempIndex((prev) => prev + 1), 120);
-              }
             }}
           >
             <span className="cerqSegmentNum">{item.value}</span>
@@ -720,6 +720,7 @@ setTempAnswers({});
         {tempIndex < 23 && (
           <button
             className="btn"
+            disabled={!tempQuestions[tempIndex] || !tempAnswers[tempQuestions[tempIndex].code]}
             onClick={() => {
               const current = tempQuestions[tempIndex];
               if (!current) return;
@@ -734,18 +735,27 @@ setTempAnswers({});
         )}
 
         {tempIndex === 23 && (
-          <button
-            className="btn btnPrimary"
-            disabled={Object.keys(tempAnswers).length !== 24}
-            onClick={() => {
-              setCerqIndex(0);
-              setPhase("cerq");
-            }}
-          >
-            CERQ эхлэх
-          </button>
-        )}
+  <button
+    className="btn btnPrimary"
+    disabled={Object.keys(tempAnswers).length !== 24}
+    onClick={() => {
+      setCerqIndex(0);
+      setPhase("cerq");
+    }}
+  >
+    CERQ эхлэх
+  </button>
+)}
       </div>
+
+      <p className="smallNote" style={{ marginTop: 10 }}>
+        Сонгосон хариулт:{" "}
+        <b>
+          {tempQuestions[tempIndex] && tempAnswers[tempQuestions[tempIndex].code]
+            ? tempAnswers[tempQuestions[tempIndex].code]
+            : "Сонгоогүй"}
+        </b>
+      </p>
     </div>
   </div>
 )}
