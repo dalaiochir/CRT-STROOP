@@ -667,11 +667,11 @@ setTempAnswers({});
     </div>
 
     <div className="card cerqQuestionCard" style={{ marginTop: 12 }}>
-      <div className="smallNote">
+      <div className="smallNote" style={{ marginBottom: 10 }}>
         1-Огт үгүй · 2-Ховор · 3-Заримдаа · 4-Ихэнхдээ · 5-Үргэлж
       </div>
 
-      <div className="bigText" style={{ fontSize: 22, marginTop: 14 }}>
+      <div className="bigText" style={{ fontSize: 22, lineHeight: 1.3, marginTop: 14 }}>
         {tempQuestions[tempIndex]?.text}
       </div>
 
@@ -714,8 +714,16 @@ setTempAnswers({});
         ))}
       </div>
 
-      {tempIndex === 23 && (
-        <div className="cerqBottomBar">
+      <div className="cerqBottomBar">
+        <button
+          className="btn"
+          disabled={tempIndex === 0}
+          onClick={() => setTempIndex(tempIndex - 1)}
+        >
+          ← Өмнөх
+        </button>
+
+        {tempIndex === 23 && (
           <button
             className="btn btnPrimary"
             disabled={Object.keys(tempAnswers).length !== 24}
@@ -726,8 +734,17 @@ setTempAnswers({});
           >
             CERQ эхлэх
           </button>
-        </div>
-      )}
+        )}
+      </div>
+
+      <p className="smallNote" style={{ marginTop: 10 }}>
+        Сонгосон хариулт:{" "}
+        <b>
+          {tempQuestions[tempIndex] && tempAnswers[tempQuestions[tempIndex].code]
+            ? tempAnswers[tempQuestions[tempIndex].code]
+            : "Сонгоогүй"}
+        </b>
+      </p>
     </div>
   </div>
 )}
