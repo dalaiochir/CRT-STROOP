@@ -540,6 +540,7 @@ setTempAnswers({});
 
   const currentTitle = (() => {
     if (phase === "participant") return "Оролцогчийн мэдээлэл";
+    if (phase === "temperament") return "Темпераментийн хэмжүүр (OSPP)";
     if (phase === "cerq") return "Танин мэдэхүй сэтгэл хөдлөлийн зохицуулалтын асуулга (CERQ)";
     if (phase === "intro") return "Заавар";
     if (phase === "crt" && currentStage) return currentStage;
@@ -654,10 +655,6 @@ setTempAnswers({});
 {phase === "temperament" && (
   <div style={{ width: "100%", maxWidth: 820 }}>
 
-<h1 className="h1" style={{ textAlign: "center", marginBottom: 8 }}>
-      Темпераментийн хэмжүүр (OSPP)
-    </h1>
-
     <div className="pill" style={{ justifyContent: "center" }}>
       <p className="p" style={{ textAlign: "center", marginTop: 10 }}>
         Дараах асуултууд таны зан төлөв, хандлагад хэр нийцэж байгааг сонгоно уу.
@@ -718,15 +715,21 @@ setTempAnswers({});
 
         {tempIndex === 23 && (
           <button
-            className="btn btnPrimary"
-            disabled={Object.keys(tempAnswers).length !== 24}
-            onClick={() => {
-              setCerqIndex(0);
-              setPhase("cerq");
-            }}
-          >
-            CERQ эхлэх
-          </button>
+  className="btn btnPrimary"
+  disabled={Object.keys(tempAnswers).length !== 24}
+  onClick={() => {
+    setMessage("CERQ удахгүй эхэлнэ...");
+    setPhase("idle");
+
+    setTimeout(() => {
+      setCerqIndex(0);
+      setMessage(null);
+      setPhase("cerq");
+    }, 1200);
+  }}
+>
+  CERQ эхлэх
+</button>
         )}
       </div>
 
