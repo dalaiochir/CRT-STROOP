@@ -650,46 +650,37 @@ setTempAnswers({});
 )}
 
 
+{/* Temperament */}
 {phase === "temperament" && (
-  <div className="cerqWrap">
-    <h1 className="h1 cerqTitle">Темпераментийн асуулга</h1>
-
+  <div style={{ width: "100%", maxWidth: 820 }}>
     <div className="pill" style={{ justifyContent: "center" }}>
+      <p className="p" style={{ textAlign: "center", marginTop: 10 }}>
+        Дараах асуултууд таны зан төлөв, хандлагад хэр нийцэж байгааг сонгоно уу.
+      </p>
+
       <span>Асуулт</span>
-      <b>{tempIndex + 1}/24</b>
+      <b>
+        {Math.min(tempIndex + 1, 24)}/24
+      </b>
     </div>
 
-    <div className="cerqProgressBar">
-      <div
-        className="cerqProgressFill"
-        style={{ width: `${((tempIndex + 1) / 24) * 100}%` }}
-      />
-    </div>
-
-    <div className="card cerqQuestionCard" style={{ marginTop: 12 }}>
+    <div className="card" style={{ marginTop: 12 }}>
       <div className="smallNote" style={{ marginBottom: 10 }}>
-        1-Огт үгүй · 2-Ховор · 3-Заримдаа · 4-Ихэнхдээ · 5-Үргэлж
+        1-Огт үгүй · 2-Ховор · 3-Заримдаа · 4-Ихэвчлэн · 5-Үргэлж
       </div>
 
-      <div className="bigText" style={{ fontSize: 22, lineHeight: 1.3, marginTop: 14 }}>
+      <div className="bigText" style={{ fontSize: 22, lineHeight: 1.25 }}>
         {tempQuestions[tempIndex]?.text}
       </div>
 
       <div className="btnRow" style={{ justifyContent: "center", marginTop: 16 }}>
-        {[
-          { value: 1, label: "Огт үгүй" },
-          { value: 2, label: "Ховор" },
-          { value: 3, label: "Заримдаа" },
-          { value: 4, label: "Ихэнхдээ" },
-          { value: 5, label: "Үргэлж" },
-        ].map((item) => (
+        {[1, 2, 3, 4, 5].map((v) => (
           <button
-            key={item.value}
-            type="button"
+            key={v}
             className={
-              "cerqSegment " +
-              (tempAnswers[tempQuestions[tempIndex]?.code] === item.value
-                ? "cerqSegmentActive"
+              "btn " +
+              (tempQuestions[tempIndex] && tempAnswers[tempQuestions[tempIndex].code] === v
+                ? "btnPrimary"
                 : "")
             }
             onClick={() => {
@@ -698,23 +689,20 @@ setTempAnswers({});
 
               setTempAnswers((prev) => ({
                 ...prev,
-                [current.code]: item.value,
+                [current.code]: v,
               }));
 
-              if (tempIndex < tempQuestions.length - 1) {
-                setTimeout(() => {
-                  setTempIndex((prev) => prev + 1);
-                }, 120);
+              if (tempIndex < 23) {
+                setTimeout(() => setTempIndex((prev) => prev + 1), 120);
               }
             }}
           >
-            <span className="cerqSegmentNum">{item.value}</span>
-            <span className="cerqSegmentLabel">{item.label}</span>
+            {v}
           </button>
         ))}
       </div>
 
-      <div className="cerqBottomBar">
+      <div className="btnRow" style={{ justifyContent: "space-between", marginTop: 16 }}>
         <button
           className="btn"
           disabled={tempIndex === 0}
@@ -737,14 +725,11 @@ setTempAnswers({});
         )}
       </div>
 
-      <p className="smallNote" style={{ marginTop: 10 }}>
-        Сонгосон хариулт:{" "}
-        <b>
-          {tempQuestions[tempIndex] && tempAnswers[tempQuestions[tempIndex].code]
-            ? tempAnswers[tempQuestions[tempIndex].code]
-            : "Сонгоогүй"}
-        </b>
-      </p>
+      {Object.keys(tempAnswers).length !== 24 && (
+        <p className="smallNote" style={{ marginTop: 10 }}>
+          Бүх 24 асуултад хариулсны дараа “CERQ эхлэх” товч идэвхжинэ.
+        </p>
+      )}
     </div>
   </div>
 )}
