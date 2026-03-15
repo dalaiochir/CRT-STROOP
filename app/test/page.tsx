@@ -675,7 +675,7 @@ setTempAnswers({});
         {tempQuestions[tempIndex]?.text}
       </div>
 
-      <div className="cerqSegmented">
+      <div className="btnRow" style={{ justifyContent: "center", marginTop: 16 }}>
         {[
           { value: 1, label: "Огт үгүй" },
           { value: 2, label: "Ховор" },
