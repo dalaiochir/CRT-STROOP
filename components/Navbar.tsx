@@ -17,7 +17,7 @@ export default function Navbar() {
       <div className="navInner">
         <div className="brand">
           <span className="badge" />
-          <span>CERQ + CRT + Stroop</span>
+          <span>OSPP + CERQ + CRT + Stroop</span>
         </div>
         <nav className="navLinks">
           {links.map((l) => {

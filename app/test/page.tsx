@@ -7,6 +7,7 @@ import Grid33 from "@/components/Grid33";
 
 import { addSession } from "@/lib/storage";
 import { mean, median, formatMs } from "@/lib/stats";
+import { TEMPERAMENT_QUESTIONS, shuffleQuestions } from "@/lib/temperament";
 import type { CRTStimulus, StroopStimulus } from "@/lib/stimuli";
 import { makeCRT, makeStroopTrials, STROOP_COLORS } from "@/lib/stimuli";
 import type { CRTStage, SectionResult, TestSession, TrialRecord } from "@/lib/types";
@@ -17,6 +18,7 @@ import { getParticipantId } from "@/lib/participant";
 type Phase =
   | "idle"
   | "participant"
+  | "temperament"
   | "cerq"
   | "intro"
   | "crt"
@@ -111,7 +113,11 @@ const STROOP_INTRO = {
 
 export default function TestPage() {
   const [phase, setPhase] = useState<Phase>("idle");
+  const [tempQuestions, setTempQuestions] = useState(TEMPERAMENT_QUESTIONS);
+  const [tempIndex, setTempIndex] = useState(0);
 
+// code -> answer map
+const [tempAnswers, setTempAnswers] = useState<Record<string, number>>({});
   // Participant
   const [age, setAge] = useState<number | "">("");
   const [gender, setGender] = useState<string>("");
@@ -478,6 +484,7 @@ export default function TestPage() {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
+    
     crt: {
       accuracy: crtAcc,
       meanRtMs: crtMeanRt,
@@ -490,6 +497,7 @@ export default function TestPage() {
     gender: gender || null,
     education: education || null,
     cerqAnswers,
+    temperamentAnswers: tempAnswers,
   }),
 }).catch(() => {});
     } catch {
@@ -502,11 +510,17 @@ export default function TestPage() {
     savedRef.current = false;
     setSectionResults([]);
     setStroopResult(null);
+    setTempQuestions(shuffleQuestions(TEMPERAMENT_QUESTIONS));
+    setTempIndex(0);
+    setTempAnswers({});
 
     // reset participant + cerq
     setAge("");
     setGender("");
     setEducation("");
+    setTempQuestions(shuffleQuestions(TEMPERAMENT_QUESTIONS));
+setTempIndex(0);
+setTempAnswers({});
     setCerqIndex(0);
     setCerqAnswers(Array(36).fill(0));
 
@@ -622,7 +636,7 @@ export default function TestPage() {
         <button
           className="btn btnPrimary"
           disabled={age === "" || !gender || !education}
-          onClick={() => setPhase("cerq")}
+          onClick={() => setPhase("temperament")}
         >
           Дараагийн алхам
         </button>
@@ -635,6 +649,106 @@ export default function TestPage() {
   </div>
 )}
 
+
+{phase === "temperament" && (
+  <div className="cerqWrap">
+    <div className="pill" style={{ justifyContent: "center", marginTop: 10 }}>
+      <span>Асуулт</span>
+      <b>{tempIndex + 1}/24</b>
+    </div>
+
+    <div className="cerqProgressBar">
+      <div
+        className="cerqProgressFill"
+        style={{ width: `${((tempIndex + 1) / 24) * 100}%` }}
+      />
+    </div>
+
+    <div className="card cerqQuestionCard" style={{ marginTop: 12 }}>
+      <h1 className="h1 cerqTitle">Темпераментийн асуулга</h1>
+
+      <div className="bigText" style={{ fontSize: 22, lineHeight: 1.3, marginTop: 14 }}>
+        {tempQuestions[tempIndex]?.text}
+      </div>
+
+      <div className="cerqSegmented">
+        {[
+          { value: 1, label: "Огт үгүй" },
+          { value: 2, label: "Ховор" },
+          { value: 3, label: "Заримдаа" },
+          { value: 4, label: "Ихэнхдээ" },
+          { value: 5, label: "Үргэлж" },
+        ].map((item) => (
+          <button
+            key={item.value}
+            type="button"
+            className={
+              "cerqSegment " +
+              (tempAnswers[tempQuestions[tempIndex]?.code] === item.value
+                ? "cerqSegmentActive"
+                : "")
+            }
+            onClick={() => {
+              const current = tempQuestions[tempIndex];
+              if (!current) return;
+
+              setTempAnswers((prev) => ({
+                ...prev,
+                [current.code]: item.value,
+              }));
+
+              if (tempIndex < tempQuestions.length - 1) {
+                setTimeout(() => setTempIndex((prev) => prev + 1), 120);
+              }
+            }}
+          >
+            <span className="cerqSegmentNum">{item.value}</span>
+            <span className="cerqSegmentLabel">{item.label}</span>
+          </button>
+        ))}
+      </div>
+
+      <div className="cerqBottomBar">
+        <button
+          className="btn"
+          disabled={tempIndex === 0}
+          onClick={() => setTempIndex(tempIndex - 1)}
+        >
+          ← Өмнөх
+        </button>
+
+        {tempIndex < 23 && (
+          <button
+            className="btn"
+            onClick={() => {
+              const current = tempQuestions[tempIndex];
+              if (!current) return;
+
+              if (tempAnswers[current.code] >= 1 && tempAnswers[current.code] <= 5) {
+                setTempIndex(tempIndex + 1);
+              }
+            }}
+          >
+            Дараах →
+          </button>
+        )}
+
+        {tempIndex === 23 && (
+          <button
+            className="btn btnPrimary"
+            disabled={Object.keys(tempAnswers).length !== 24}
+            onClick={() => {
+              setCerqIndex(0);
+              setPhase("cerq");
+            }}
+          >
+            CERQ эхлэх
+          </button>
+        )}
+      </div>
+    </div>
+  </div>
+)}
         {/* CERQ */}
         {phase === "cerq" && (
 
@@ -713,7 +827,7 @@ export default function TestPage() {
           </div>
         )}
 
-{phase !== "cerq" && phase !== "participant" && (
+{phase !== "cerq" && phase !== "temperament" && phase !== "participant" && (
       <div
         className={
           "stimulusBox " +

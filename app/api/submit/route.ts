@@ -8,6 +8,7 @@ type SubmitBody = {
   gender?: string | null;
   education?: string | null;
   cerqAnswers?: number[];
+  temperamentAnswers?: Record<string, number>;
 };
 
 export const runtime = "nodejs";
@@ -70,14 +71,22 @@ export async function POST(req: Request) {
         cerq_q33,
         cerq_q34,
         cerq_q35,
-        cerq_q36
+        cerq_q36,
+        p1, p2, p3, p4, p5, p6,
+    m1, m2, m3, m4, m5, m6,
+    s1, s2, s3, s4, s5, s6,
+    c1, c2, c3, c4, c5, c6
       )
       VALUES (
         $1, $2, $3, $4, $5, $6, $7,
         $8, $9, $10, $11, $12, $13, $14, $15, $16, $17,
         $18, $19, $20, $21, $22, $23, $24, $25, $26, $27,
         $28, $29, $30, $31, $32, $33, $34, $35, $36, $37,
-        $38, $39, $40, $41, $42, $43
+        $38, $39, $40, $41, $42, $43,
+        $44, $45, $46, $47, $48, $49,
+    $50, $51, $52, $53, $54, $55,
+    $56, $57, $58, $59, $60, $61,
+    $62, $63, $64, $65, $66, $67
       )
       `,
       [
@@ -124,6 +133,33 @@ export async function POST(req: Request) {
         cerq[33] ?? null,
         cerq[34] ?? null,
         cerq[35] ?? null,
+        body.temperamentAnswers?.P1 ?? null,
+    body.temperamentAnswers?.P2 ?? null,
+    body.temperamentAnswers?.P3 ?? null,
+    body.temperamentAnswers?.P4 ?? null,
+    body.temperamentAnswers?.P5 ?? null,
+    body.temperamentAnswers?.P6 ?? null,
+
+    body.temperamentAnswers?.M1 ?? null,
+    body.temperamentAnswers?.M2 ?? null,
+    body.temperamentAnswers?.M3 ?? null,
+    body.temperamentAnswers?.M4 ?? null,
+    body.temperamentAnswers?.M5 ?? null,
+    body.temperamentAnswers?.M6 ?? null,
+
+    body.temperamentAnswers?.S1 ?? null,
+    body.temperamentAnswers?.S2 ?? null,
+    body.temperamentAnswers?.S3 ?? null,
+    body.temperamentAnswers?.S4 ?? null,
+    body.temperamentAnswers?.S5 ?? null,
+    body.temperamentAnswers?.S6 ?? null,
+
+    body.temperamentAnswers?.C1 ?? null,
+    body.temperamentAnswers?.C2 ?? null,
+    body.temperamentAnswers?.C3 ?? null,
+    body.temperamentAnswers?.C4 ?? null,
+    body.temperamentAnswers?.C5 ?? null,
+    body.temperamentAnswers?.C6 ?? null,
       ]
     );
 
