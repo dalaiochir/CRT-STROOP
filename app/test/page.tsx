@@ -653,6 +653,11 @@ setTempAnswers({});
 {/* Temperament */}
 {phase === "temperament" && (
   <div style={{ width: "100%", maxWidth: 820 }}>
+
+<h1 className="h1" style={{ textAlign: "center", marginBottom: 8 }}>
+      Темпераментийн хэмжүүр (OSPP)
+    </h1>
+
     <div className="pill" style={{ justifyContent: "center" }}>
       <p className="p" style={{ textAlign: "center", marginTop: 10 }}>
         Дараах асуултууд таны зан төлөв, хандлагад хэр нийцэж байгааг сонгоно уу.
