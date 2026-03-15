@@ -654,21 +654,10 @@ setTempAnswers({});
   <div className="cerqWrap">
     <h1 className="h1 cerqTitle">Темпераментийн асуулга</h1>
 
-    <div className="pill" style={{ justifyContent: "center", marginTop: 10 }}>
+    <div className="pill" style={{ justifyContent: "center" }}>
       <span>Асуулт</span>
       <b>{tempIndex + 1}/24</b>
     </div>
-    <div className="pill" style={{ justifyContent: "center" }}>
-
-<p className="p" style={{ textAlign: "center", marginTop: 10 }}>
-  Стресст өртөх, түгшүүр мэдрэх, өвдөх зэрэг таагүй үйл явдал тохиолдох үед та юу гэж боддог вэ?
-</p>
-
-              <span>Асуулт</span>
-              <b>
-                {Math.min(tempIndex + 1, 24)}/24
-              </b>
-            </div>
 
     <div className="cerqProgressBar">
       <div
