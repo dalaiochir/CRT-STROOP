@@ -667,11 +667,11 @@ setTempAnswers({});
     </div>
 
     <div className="card cerqQuestionCard" style={{ marginTop: 12 }}>
-      <div className="smallNote" style={{ marginBottom: 10 }}>
+      <div className="smallNote">
         1-Огт үгүй · 2-Ховор · 3-Заримдаа · 4-Ихэнхдээ · 5-Үргэлж
       </div>
 
-      <div className="bigText" style={{ fontSize: 22, lineHeight: 1.3, marginTop: 14 }}>
+      <div className="bigText" style={{ fontSize: 22, marginTop: 14 }}>
         {tempQuestions[tempIndex]?.text}
       </div>
 
@@ -700,6 +700,12 @@ setTempAnswers({});
                 ...prev,
                 [current.code]: item.value,
               }));
+
+              if (tempIndex < tempQuestions.length - 1) {
+                setTimeout(() => {
+                  setTempIndex((prev) => prev + 1);
+                }, 120);
+              }
             }}
           >
             <span className="cerqSegmentNum">{item.value}</span>
@@ -708,54 +714,20 @@ setTempAnswers({});
         ))}
       </div>
 
-      <div className="cerqBottomBar">
-        <button
-          className="btn"
-          disabled={tempIndex === 0}
-          onClick={() => setTempIndex(tempIndex - 1)}
-        >
-          ← Өмнөх
-        </button>
-
-        {tempIndex < 23 && (
+      {tempIndex === 23 && (
+        <div className="cerqBottomBar">
           <button
-            className="btn"
-            disabled={!tempQuestions[tempIndex] || !tempAnswers[tempQuestions[tempIndex].code]}
+            className="btn btnPrimary"
+            disabled={Object.keys(tempAnswers).length !== 24}
             onClick={() => {
-              const current = tempQuestions[tempIndex];
-              if (!current) return;
-
-              if (tempAnswers[current.code] >= 1 && tempAnswers[current.code] <= 5) {
-                setTempIndex(tempIndex + 1);
-              }
+              setCerqIndex(0);
+              setPhase("cerq");
             }}
           >
-            Дараах →
+            CERQ эхлэх
           </button>
-        )}
-
-        {tempIndex === 23 && (
-  <button
-    className="btn btnPrimary"
-    disabled={Object.keys(tempAnswers).length !== 24}
-    onClick={() => {
-      setCerqIndex(0);
-      setPhase("cerq");
-    }}
-  >
-    CERQ эхлэх
-  </button>
-)}
-      </div>
-
-      <p className="smallNote" style={{ marginTop: 10 }}>
-        Сонгосон хариулт:{" "}
-        <b>
-          {tempQuestions[tempIndex] && tempAnswers[tempQuestions[tempIndex].code]
-            ? tempAnswers[tempQuestions[tempIndex].code]
-            : "Сонгоогүй"}
-        </b>
-      </p>
+        </div>
+      )}
     </div>
   </div>
 )}
