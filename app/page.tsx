@@ -10,14 +10,12 @@ export default function HomePage() {
           Энэхүү вэбсайт нь 4 үе шаттай бөгөөд танин мэдэхүй-сэтгэл хөдлөлийн зохицуулалтын
   асуулга, темпераментийн хэмжүүр, 8 дэд хэсэг бүхий сонгох хариу үйлдлийн хугацааны
   дасгалууд болон Stroop өнгөний дасгалуудаас бүрдэнэ.
-        </p>
+        </p>c
 
         <div className="btnRow">
           <Link className="btn btnPrimary" href="/test">Тест эхлэх</Link>
         </div>
-
         <hr className="hr" />
-
         <p className="smallNote">
           Хариултыг <span className="kbd">←</span> болон <span className="kbd">→</span> товчоор өгөх
           (эсвэл дэлгэцийн товчлуурууд дээр дарж болно).

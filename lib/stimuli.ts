@@ -131,38 +131,53 @@ function encodeCells(cells: boolean[]): string {
   return cells.map((v) => (v ? "1" : "0")).join("");
 }
 
-function genConnectedPatterns(n: number): boolean[][] {
-  const out: boolean[][] = [];
-  const used = new Set<string>();
-  while (out.length < n) {
-    // choose 3..6 filled cells
-    const filledCount = 3 + Math.floor(Math.random() * 4);
-    const cells = Array(9).fill(false) as boolean[];
-    const idxs = shuffle([...Array(9).keys()]).slice(0, filledCount);
-    for (const i of idxs) cells[i] = true;
-    if (!isConnected(cells)) continue;
-    const key = encodeCells(cells);
-    if (used.has(key)) continue;
-    used.add(key);
-    out.push(cells);
+function manhattan(a: number, b: number) {
+  const ar = Math.floor(a / 3), ac = a % 3;
+  const br = Math.floor(b / 3), bc = b % 3;
+  return Math.abs(ar - br) + Math.abs(ac - bc);
+}
+
+function disconnectedGroupsAreClear(cells: boolean[]): boolean {
+  const filled = cells
+    .map((v, i) => (v ? i : -1))
+    .filter((i) => i !== -1);
+
+  if (filled.length < 3) return false;
+  if (isConnected(cells)) return false;
+
+  // Аль болох салангид байлгах:
+  // дор хаяж нэг хосын Manhattan distance >= 2 байх
+  let farPair = false;
+  for (let i = 0; i < filled.length; i++) {
+    for (let j = i + 1; j < filled.length; j++) {
+      if (manhattan(filled[i], filled[j]) >= 2) {
+        farPair = true;
+      }
+    }
   }
-  return out;
+  return farPair;
 }
 
 function genDisconnectedPatterns(n: number): boolean[][] {
   const out: boolean[][] = [];
   const used = new Set<string>();
+
   while (out.length < n) {
-    const filledCount = 3 + Math.floor(Math.random() * 4);
+    const filledCount = 3 + Math.floor(Math.random() * 2); // 3 эсвэл 4 нүд байхад илүү ойлгомжтой
     const cells = Array(9).fill(false) as boolean[];
     const idxs = shuffle([...Array(9).keys()]).slice(0, filledCount);
+
     for (const i of idxs) cells[i] = true;
-    if (isConnected(cells)) continue;
+
+    if (!disconnectedGroupsAreClear(cells)) continue;
+
     const key = encodeCells(cells);
     if (used.has(key)) continue;
+
     used.add(key);
     out.push(cells);
   }
+
   return out;
 }
 
