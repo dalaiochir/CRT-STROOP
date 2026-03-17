@@ -131,6 +131,29 @@ function encodeCells(cells: boolean[]): string {
   return cells.map((v) => (v ? "1" : "0")).join("");
 }
 
+function genConnectedPatterns(n: number): boolean[][] {
+  const out: boolean[][] = [];
+  const used = new Set<string>();
+
+  while (out.length < n) {
+    const filledCount = 3 + Math.floor(Math.random() * 2); // 3 эсвэл 4 нүд
+    const cells = Array(9).fill(false) as boolean[];
+    const idxs = shuffle([...Array(9).keys()]).slice(0, filledCount);
+
+    for (const i of idxs) cells[i] = true;
+
+    if (!isConnected(cells)) continue;
+
+    const key = encodeCells(cells);
+    if (used.has(key)) continue;
+
+    used.add(key);
+    out.push(cells);
+  }
+
+  return out;
+}
+
 function manhattan(a: number, b: number) {
   const ar = Math.floor(a / 3), ac = a % 3;
   const br = Math.floor(b / 3), bc = b % 3;
